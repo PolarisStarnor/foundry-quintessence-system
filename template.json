@@ -20,7 +20,7 @@
 		}
 	},
 	"Item": {
-		"types": ["action", "ability", "item"],
+		"types": ["action", "passive", "item"],
 		"templates": {
 			"base": {
 				"description": ""
@@ -32,10 +32,10 @@
 			"coins": 1,
 			"coin power": 1
 		},
-		"ability": {
+		"passive": {
 			"templates": ["base"]
 		},
-		"items": {
+		"item": {
 			"templates": ["base"],
 			"quantity": 1
 		}
