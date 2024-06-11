@@ -5,19 +5,11 @@ export const QUINTESSENCE_SYS = {};
  * @type {Object}
  */
 QUINTESSENCE_SYS.abilities = {
-  str: 'QUINTESSENCE_SYS.Ability.Str.long',
-  dex: 'QUINTESSENCE_SYS.Ability.Dex.long',
-  con: 'QUINTESSENCE_SYS.Ability.Con.long',
-  int: 'QUINTESSENCE_SYS.Ability.Int.long',
-  wis: 'QUINTESSENCE_SYS.Ability.Wis.long',
-  cha: 'QUINTESSENCE_SYS.Ability.Cha.long',
+  speed_min: 'QUINTESSENCE_SYS.Ability.Min.long',
+  speed_max: 'QUINTESSENCE_SYS.Ability.Max.long',
 };
 
 QUINTESSENCE_SYS.abilityAbbreviations = {
-  str: 'QUINTESSENCE_SYS.Ability.Str.abbr',
-  dex: 'QUINTESSENCE_SYS.Ability.Dex.abbr',
-  con: 'QUINTESSENCE_SYS.Ability.Con.abbr',
-  int: 'QUINTESSENCE_SYS.Ability.Int.abbr',
-  wis: 'QUINTESSENCE_SYS.Ability.Wis.abbr',
-  cha: 'QUINTESSENCE_SYS.Ability.Cha.abbr',
+  speed_min: 'QUINTESSENCE_SYS.Ability.Min.abbr',
+  speed_max: 'QUINTESSENCE_SYS.Ability.Max.abbr',
 };

@@ -1,16 +1,12 @@
 {
   "QUINTESSENCE_SYS": {
     "Ability": {
-      "Str": { "long": "Strength", "abbr": "str" },
-      "Con": { "long": "Constitution", "abbr": "con" },
-      "Dex": { "long": "Dexterity", "abbr": "dex" },
-      "Int": { "long": "Intelligence", "abbr": "int" },
-      "Wis": { "long": "Wisdom", "abbr": "wis" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
+      "Min": { "long": "Min. Speed", "abbr": "speed_min" },
+      "Max": { "long": "Max. Speed", "abbr": "speed_max" }
     },
     "SheetLabels": {
-      "Actor": "QuintessenceSystem Actor Sheet",
-      "Item": "QuintessenceSystem Item Sheet"
+      "Actor": "Quintessence Actor Sheet",
+      "Item": "Quintessence Item Sheet"
     },
     "Item": {
       "Spell": {
@@ -33,9 +29,9 @@
       "npc": "NPC"
     },
     "Item": {
-      "item": "Item",
-      "feature": "Feature",
-      "spell": "Spell"
+      "action": "Action",
+      "ability": "Ability",
+      "item": "Item"
     }
   }
 }
