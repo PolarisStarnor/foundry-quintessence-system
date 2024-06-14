@@ -29,7 +29,7 @@ Hooks.once('init', function () {
      * @type {String}
      */
     CONFIG.Combat.initiative = {
-        formula: '1d20 + @abilities.dex.mod',
+        formula: '@speed.min + 1d(@speed.max - @speed.min)',
         decimals: 2,
     };
 
@@ -74,7 +74,11 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 Hooks.once('ready', function () {
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
     Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
-    console.log("Hello World");
+
+    // Greeting message c:
+    ChatMessage.create({
+        content: "New Session Starts Here.",
+    });
 });
 
 /* -------------------------------------------- */

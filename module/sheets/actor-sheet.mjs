@@ -105,7 +105,7 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 		// Initialize containers.
 		const gear = [];
 		const passives = [];
-		const actions = [];
+		const skills = [];
 
 		// Iterate through items, allocating to containers
 		for (let i of context.items) {
@@ -118,16 +118,16 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 			else if (i.type === 'passive') {
 				passives.push(i);
 			}
-			// Append to actions.
-			else if (i.type === 'action') {
-                            actions.push(i);
+			// Append to skills.
+			else if (i.type === 'skill') {
+                            skills.push(i);
 			}
 		}
 
 		// Assign and return
 		context.gear = gear;
 		context.passives = passives;
-		context.actions = actions;
+		context.skills = skills;
 	}
 
 	/* -------------------------------------------- */

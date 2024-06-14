@@ -9,10 +9,6 @@
       "Item": "Quintessence Item Sheet"
     },
     "Item": {
-      "Spell": {
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
-      }
     },
     "Effect": {
       "Source": "Source",
@@ -29,8 +25,8 @@
       "npc": "NPC"
     },
     "Item": {
-      "action": "Action",
-      "ability": "Ability",
+      "skill": "Skill",
+      "passive": "Passive",
       "item": "Item"
     }
   }

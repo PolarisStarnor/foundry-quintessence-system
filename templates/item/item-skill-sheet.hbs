@@ -15,11 +15,29 @@
         /></h1>
       <div class='grid grid-2col'>
         <div class='resource'>
-          <label class='resource-label'>Quantity</label>
+          <label class='resource-label'>Base Strength</label>
           <input
             type='text'
             name='system.quantity'
-            value='{{system.quantity}}'
+            value='{{item.base}}'
+            data-dtype='Number'
+          />
+        </div>
+        <div class='resource'>
+          <label class='resource-label'>Combo</label>
+          <input
+            type='text'
+            name='system.weight'
+            value='{{item.coins}}'
+            data-dtype='Number'
+          />
+        </div>
+        <div class='resource'>
+          <label class='resource-label'>Power</label>
+          <input
+            type='text'
+            name='system.weight'
+            value='{{item.coin_power}}'
             data-dtype='Number'
           />
         </div>

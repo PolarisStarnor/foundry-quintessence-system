@@ -20,17 +20,17 @@
 		}
 	},
 	"Item": {
-		"types": ["action", "passive", "item"],
+		"types": ["skill", "passive", "item"],
 		"templates": {
 			"base": {
 				"description": ""
 			}
 		},
-		"action": {
+		"skill": {
 			"templates": ["base"],
-			"power": 0,
+			"base": 0,
 			"coins": 1,
-			"coin power": 1
+			"coin_power": 1
 		},
 		"passive": {
 			"templates": ["base"]
