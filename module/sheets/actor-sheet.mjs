@@ -110,17 +110,17 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 		// Iterate through items, allocating to containers
 		for (let i of context.items) {
 			i.img = i.img || Item.DEFAULT_ICON;
-			// Append to gear.
-			if (i.type === 'item') {
-				gear.push(i);
+			// Append to skills.
+			if (i.type === 'skill') {
+				skills.push(i);
 			}
 			// Append to abilities.
 			else if (i.type === 'passive') {
 				passives.push(i);
 			}
-			// Append to skills.
-			else if (i.type === 'skill') {
-                            skills.push(i);
+			// Append to items.
+			else if (i.type === 'item') {
+                            gear.push(i);
 			}
 		}
 
