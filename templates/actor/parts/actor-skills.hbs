@@ -1,6 +1,9 @@
 <ol class='items-list'>
   <li class='item flexrow items-header'>
     <div class='item-name'>{{localize 'Name'}}</div>
+	<div class='skill-stats item-prop'>Base</div>
+	<div class='skill-stats item-prop'>Coins</div>
+	<div class='skill-stats item-prop'>Coin Value</div>
     <div class='item-controls'>
       <a
         class='item-control item-create'
@@ -27,6 +30,9 @@
         </div>
         <h4>{{item.name}}</h4>
       </div>
+	  <div class='skill-stats item-prop'>{{item.system.base}}</div>
+	  <div class='skill-stats item-prop'>{{item.system.coins}}</div>
+	  <div class='skill-stats item-prop'>{{item.system.coin_power}}</div>
       <div class='item-controls'>
         <a
           class='item-control item-edit'

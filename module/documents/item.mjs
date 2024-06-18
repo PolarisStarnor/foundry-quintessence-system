@@ -45,7 +45,9 @@ export class QuintessenceSystemItem extends Item {
         const label = `[${item.type}] ${item.name}`;
 
         // If there's no roll data, send a chat message.
-        if (!this.system.formula) {
+        if (this.system.base === undefined ||
+            this.system.coin_power === undefined ||
+            this.system.coins === undefined) {
             ChatMessage.create({
                 speaker: speaker,
                 rollMode: rollMode,
