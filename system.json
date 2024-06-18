@@ -8,10 +8,10 @@
 			"discord": "@polarisstarnor"
 		}
 	],
-	"url": "Replace this with a link to your public repository",
+	"url": "https://github.com/PolarisStarnor/foundry-quintessence",
 	"license": "LICENSE.txt",
 	"readme": "README.md",
-	"bugs": "Replace this with a link to file issues or tickets",
+	"bugs": "https://github.com/PolarisStarnor/foundry-quintessence/issues/new",
 	"changelog": "CHANGELOG.md",
 	"media": [
 		{
@@ -41,7 +41,8 @@
 	"packs": [],
 	"packFolders": [],
 	"socket": false,
-	"manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
+	"manifest": "https://raw.githubusercontent.com/PolarisStarnor/foundry-quintessence/blob/master/system.json", 
+	"NOTE": "CHECK MANIFEST LATER IN CASE I ACTUALLY HAVE TO DO SOMETHING BESIDES WAIT FOR GITHUB TO PROVIDE RAW CONTENT",
 	"download": "This must link to a .zip file of the current version",
 	"background": "systems/foundry-quintessence-system/assets/anvil-impact.png",
 	"primaryTokenAttribute": "health",
