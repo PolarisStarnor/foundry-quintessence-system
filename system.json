@@ -42,7 +42,7 @@
 	"packFolders": [],
 	"socket": false,
 	"manifest": "https://raw.githubusercontent.com/PolarisStarnor/foundry-quintessence/master/system.json", 
-	"download": "This must link to a .zip file of the current version",
+	"download": "https://github.com/PolarisStarnor/foundry-quintessence/archive/refs/heads/master.zip",
 	"background": "systems/foundry-quintessence-system/assets/anvil-impact.png",
 	"primaryTokenAttribute": "health",
 	"secondaryTokenAttribute": "power"
