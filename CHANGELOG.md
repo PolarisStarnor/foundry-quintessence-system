@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.1.1
+- Figured out a stupid naming error that made users unable to edit skills.
+
 ## 0.1.0
 - The more barebones possible functionality for this to theoretically work as intended.
 - Character hp, combat initiative, skills, all roll as intended.
