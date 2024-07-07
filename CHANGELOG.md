@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.2.0
+- Statues exist in the backend
+  - Need smarter ways to actually change their values
+
 ## 0.1.1
 - Figured out a stupid naming error that made users unable to edit skills.
 
