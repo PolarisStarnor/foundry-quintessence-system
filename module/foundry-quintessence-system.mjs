@@ -29,7 +29,7 @@ Hooks.once('init', function () {
      * @type {String}
      */
     CONFIG.Combat.initiative = {
-        formula: '@speed.min + 1d(@speed.max - @speed.min)',
+        formula: '@speed.min + 1d(@speed.max - @speed.min) + @status.haste - @status.bind',
         decimals: 2,
     };
 

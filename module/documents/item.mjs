@@ -26,7 +26,10 @@ export class QuintessenceSystemItem extends Item {
 
         // If present, add the actor's roll data
         rollData.actor = this.actor.getRollData();
-        rollData.formula = "@base + @coin_power * ((@coins)d2 - @coins)";
+        rollData.formula = "@base + @actor.status.base_power_mod + \
+(@coin_power + @actor.status.coin_power_mod) * \
+((@coins + @actor.status.coin_count_mod)d2 - \
+(@coins + @actor.status.coin_count_mod))";
 
         return rollData;
     }

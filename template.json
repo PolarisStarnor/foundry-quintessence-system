@@ -3,20 +3,38 @@
 		"types": ["character"],
 		"templates": {
 			"base": {
-				"health": {
-					"value": 20,
-					"min": 0,
-					"max": 20
-				},
-				"speed": {
-					"min": 1,
-					"max": 5
-				},
 				"biography": ""
 			}
 		},
 		"character": {
-			"templates": ["base"]
+			"templates": ["base"],
+			"health": {
+				"value": 20,
+				"min": 0,
+				"max": 20
+			},
+			"speed": {
+				"min": 2,
+				"max": 5
+			},
+			"sanity": {
+				"value": 0,
+				"min": -5,
+				"max": 5
+			},
+			"status": {
+				"coin_count_mod": 0,
+				"coin_power_mod": 0,
+				"base_power_mod": 0,
+				"burn": 0,
+				"bleed": 0,
+				"sinking": 0,
+				"paralysis": 0,
+				"rupture": 0,
+				"tremor": 0,
+				"haste": 0,
+				"bind": 0
+			}
 		}
 	},
 	"Item": {

@@ -16,8 +16,8 @@
 	"media": [
 		{
 			"type": "setup",
-			"url": "systems/foundry-quintessence-system/assets/anvil-impact.png",
-			"thumbnail": "systems/foundry-quintessence-system/assets/anvil-impact.png"
+			"url": "systems/foundry-quintessence-system/assets/symbol.png",
+			"thumbnail": "systems/foundry-quintessence-system/assets/symbol.png"
 		}
 	],
 	"version": "0.1.0",
@@ -42,9 +42,8 @@
 	"packFolders": [],
 	"socket": false,
 	"manifest": "https://raw.githubusercontent.com/PolarisStarnor/foundry-quintessence/blob/master/system.json", 
-	"NOTE": "CHECK MANIFEST LATER IN CASE I ACTUALLY HAVE TO DO SOMETHING BESIDES WAIT FOR GITHUB TO PROVIDE RAW CONTENT",
 	"download": "This must link to a .zip file of the current version",
-	"background": "systems/foundry-quintessence-system/assets/anvil-impact.png",
+	"background": "systems/foundry-quintessence-system/assets/symbol.png",
 	"primaryTokenAttribute": "health",
 	"secondaryTokenAttribute": "power"
 }
