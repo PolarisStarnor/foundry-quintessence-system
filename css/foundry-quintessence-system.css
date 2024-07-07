@@ -364,3 +364,8 @@
 .foundry-quintessence-system .effects .item .effect-controls {
   border: none;
 }
+.resource-input-seperator {
+  padding: 4px;
+  font-size: 16px;
+  font-weight: bold;
+}

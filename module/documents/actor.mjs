@@ -45,6 +45,7 @@ export class QuintessenceSystemActor extends Actor {
 
         // Make modifications to data here. For example:
         const systemData = actorData.system;
+        const status = systemData.status;
 
         // // Loop through ability scores, and add their modifiers to our sheet output.
         // for (let [key, ability] of Object.entries(systemData.abilities)) {
