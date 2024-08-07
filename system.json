@@ -43,7 +43,7 @@
 	"socket": false,
 	"manifest": "https://raw.githubusercontent.com/PolarisStarnor/foundry-quintessence/master/system.json",
 	"download": "https://github.com/PolarisStarnor/foundry-quintessence/archive/refs/heads/master.zip",
-	"background": "systems/foundry-quintessence/assets/anvil-impact.png",
+	"background": "systems/foundry-quintessence/assets/symbol.png",
 	"primaryTokenAttribute": "health",
 	"secondaryTokenAttribute": "power"
 }
