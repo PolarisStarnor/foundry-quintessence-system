@@ -41,14 +41,9 @@ export function onManageActiveEffect(event, owner) {
 export function prepareActiveEffectCategories(effects) {
   // Define effect header categories
   const categories = {
-    temporary: {
-      type: 'temporary',
-      label: game.i18n.localize('QUINTESSENCE_SYS.Effect.Temporary'),
-      effects: [],
-    },
-    passive: {
-      type: 'passive',
-      label: game.i18n.localize('QUINTESSENCE_SYS.Effect.Passive'),
+    active: {
+      type: 'active',
+      label: game.i18n.localize('QUINTESSENCE_SYS.Effect.Active'),
       effects: [],
     },
     inactive: {
@@ -61,8 +56,7 @@ export function prepareActiveEffectCategories(effects) {
   // Iterate over active effects, classifying them into categories
   for (let e of effects) {
     if (e.disabled) categories.inactive.effects.push(e);
-    else if (e.isTemporary) categories.temporary.effects.push(e);
-    else categories.passive.effects.push(e);
+    else categories.active.effects.push(e);
   }
   return categories;
 }
