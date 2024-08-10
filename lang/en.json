@@ -12,6 +12,7 @@
 				},
 				"Effect": {
 						"Source": "Source",
+						"Count": "Count",
 						"Active": "Active Effects",
 						"Inactive": "Inactive Effects"
 				}
