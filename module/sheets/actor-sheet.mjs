@@ -226,7 +226,14 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 				const item = this.actor.items.get(itemId);
 				if (item) return item.roll();
 			}
+
+            if (dataset.rollType == 'damage') {
+                const itemID = element.closest('.item').dataset.itemId;
+                const item = this.actor.items.get(itemId);
+                if (item) return item.roll();
+            }
 		}
+
 
 		// Handle rolls that supply the formula directly.
 		if (dataset.roll) {
@@ -240,4 +247,5 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 			return roll;
 		}
 	}
+
 }

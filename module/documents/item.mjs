@@ -26,10 +26,18 @@ export class QuintessenceSystemItem extends Item {
 
         // If present, add the actor's roll data
         rollData.actor = this.actor.getRollData();
-        rollData.formula = "@base + @actor.status.base_power_mod + \
-(@coin_power + @actor.status.coin_power_mod) * \
-((@coins + @actor.status.coin_count_mod)d2 - \
-(@coins + @actor.status.coin_count_mod))";
+        rollData.final_base_power = rollData.base + rollData.actor.status.base_power_mod;
+        rollData.final_coin_count = rollData.coins + rollData.actor.status.coin_count_mod;
+        rollData.final_coin_power = rollData.coin_power + rollData.actor.status.coin_power_mod
+        rollData.clash = "@final_base_power + \
+@final_coin_power * \
+((@final_coin_count)d2 - @final_coin_count)";
+
+        // Iteratively construct this garbage roll formula
+		rollData.damage = "@final_count_count * @final_base_power"
+        for (let i = rollData.final_coin_count-1; i >= 0; i--) {
+            rollData.damage += "+" + i.toString() + "* @final_coin_power * (1d2 - 1)";
+        }
 
         return rollData;
     }
@@ -64,7 +72,7 @@ export class QuintessenceSystemItem extends Item {
             const rollData = this.getRollData();
 
             // Invoke the roll and submit it to chat.
-            const roll = new Roll(rollData.formula, rollData);
+            const roll = new Roll(rollData.clash, rollData);
             // If you need to store the value first, uncomment the next line.
             // const result = await roll.evaluate();
             roll.toMessage({
@@ -75,4 +83,5 @@ export class QuintessenceSystemItem extends Item {
             return roll;
         }
     }
+
 }
