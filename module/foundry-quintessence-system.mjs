@@ -79,6 +79,18 @@ Hooks.once('ready', function () {
     ChatMessage.create({
         content: "New Session Starts Here.",
     });
+
+    // const dialog_test = new Dialog({
+    //     title: "Title",
+    //     content: "content",
+    //     buttons: {
+    //         button1: {
+    //             label: "Button #1",
+    //             callback: () => {ui.notifications.info("Button #1 Clicked!")},
+    //             icon: `<i class="fas fa-check"></i>`
+    //         }
+    //     }
+    // }).render(true);
 });
 
 /* -------------------------------------------- */
