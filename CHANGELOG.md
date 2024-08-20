@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.0
+Basic format to support various rolls (skill checks, clashes, damage)
+
 ## 0.2.0
 - Statues exist in the backend
   - Need smarter ways to actually change their values

@@ -221,16 +221,16 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 
 		// Handle item rolls.
 		if (dataset.rollType) {
-			if (dataset.rollType == 'item') {
+			if (dataset.rollType == 'skill-check') {
 				const itemId = element.closest('.item').dataset.itemId;
 				const item = this.actor.items.get(itemId);
-				if (item) return item.roll();
+				if (item) return item.roll("check");
 			}
 
-            if (dataset.rollType == 'damage') {
+            if (dataset.rollType == 'skill-damage') {
                 const itemID = element.closest('.item').dataset.itemId;
                 const item = this.actor.items.get(itemId);
-                if (item) return item.roll();
+                if (item) return item.roll("damage");
             }
 		}
 

@@ -29,13 +29,13 @@ export class QuintessenceSystemItem extends Item {
         rollData.final_base_power = rollData.base + rollData.actor.status.base_power_mod;
         rollData.final_coin_count = rollData.coins + rollData.actor.status.coin_count_mod;
         rollData.final_coin_power = rollData.coin_power + rollData.actor.status.coin_power_mod
-        rollData.clash = "@final_base_power + \
+        rollData.check = "@final_base_power + \
 @final_coin_power * \
 ((@final_coin_count)d2cs=2)";
 
         // Iteratively construct this garbage roll formula
-		rollData.damage = "@final_count_count * @final_base_power"
-        for (let i = rollData.final_coin_count-1; i >= 0; i--) {
+		rollData.damage = "@final_coin_count * @final_base_power"
+        for (let i = rollData.final_coin_count; i > 0; i--) {
             rollData.damage += "+" + i.toString() + "* @final_coin_power * 1d2cs=2";
         }
 
@@ -44,10 +44,10 @@ export class QuintessenceSystemItem extends Item {
 
     /**
      * Handle clickable rolls.
-     * @param {Event} event   The originating click event
+     * @param {String} type   String identifying the check type
      * @private
      */
-    async roll() {
+    async roll(type) {
         const item = this;
 
         // Initialize chat data.
@@ -71,8 +71,21 @@ export class QuintessenceSystemItem extends Item {
             // Retrieve roll data.
             const rollData = this.getRollData();
 
+            var roll;
             // Invoke the roll and submit it to chat.
-            const roll = new Roll(rollData.clash, rollData);
+			if (type === "damage") {
+                roll = new Roll(rollData.damage, rollData);
+            } else if (type === "check") {
+                roll = new Roll(rollData.check, rollData);
+            } else {
+                ChatMessage.create({
+                    speaker: speaker,
+                    rollMode: rollMode,
+                    flavor: label,
+                    content: "Something went terribly Wrong",
+            	});
+                return;
+            }
             // If you need to store the value first, uncomment the next line.
             // const result = await roll.evaluate();
             roll.toMessage({

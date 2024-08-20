@@ -78,6 +78,13 @@ Hooks.once('ready', function () {
     // Greeting message c:
     ChatMessage.create({
         content: "New Session Starts Here.",
+        buttons: {
+            button1: {
+                label: "Button #1",
+                callback: () => {ui.notifications.info("Button #1 Clicked!")},
+                icon: `<i class="fas fa-check"></i>`
+            }
+        }
     });
 
     // const dialog_test = new Dialog({
