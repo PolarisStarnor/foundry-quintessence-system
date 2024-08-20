@@ -31,12 +31,12 @@ export class QuintessenceSystemItem extends Item {
         rollData.final_coin_power = rollData.coin_power + rollData.actor.status.coin_power_mod
         rollData.clash = "@final_base_power + \
 @final_coin_power * \
-((@final_coin_count)d2 - @final_coin_count)";
+((@final_coin_count)d2cs=2)";
 
         // Iteratively construct this garbage roll formula
 		rollData.damage = "@final_count_count * @final_base_power"
         for (let i = rollData.final_coin_count-1; i >= 0; i--) {
-            rollData.damage += "+" + i.toString() + "* @final_coin_power * (1d2 - 1)";
+            rollData.damage += "+" + i.toString() + "* @final_coin_power * 1d2cs=2";
         }
 
         return rollData;
