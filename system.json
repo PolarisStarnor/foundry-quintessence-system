@@ -26,7 +26,7 @@
 		"verified": 12
 	},
 	"esmodules": ["module/foundry-quintessence-system.mjs"],
-	"styles": ["css/foundry-quintessence-system.css"],
+	"styles": ["css/clash-style.css", "css/foundry-quintessence-system.css"],
 	"languages": [
 		{
 			"lang": "en",

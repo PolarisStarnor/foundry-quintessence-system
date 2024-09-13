@@ -9,6 +9,135 @@ import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { QUINTESSENCE_SYS } from './helpers/config.mjs';
 
 /* -------------------------------------------- */
+/*  Functions for Chat Buttons?                 */
+/* -------------------------------------------- */
+
+function getHeads(coins) {
+    var heads = [];
+    for(let i = 0; i < coins; i++) {
+        if (Math.random() < 0.5)
+            heads.push(1);
+        else
+            heads.push(0);
+    }
+    return heads;
+}
+
+function coinImg (coinList) {
+    const tail_img = `<img class="chat-coin-img" src="systems/foundry-quintessence-system/assets/tails.png" width=16/>`
+    const head_img = `<img class="chat-coin-img" src="systems/foundry-quintessence-system/assets/heads.png" width=16/>`
+
+    var res = ""
+    for(const x of coinList) {
+        if (x)
+            res += head_img;
+        else
+            res += tail_img;
+    }
+    return res;
+}
+
+function clashContinue(message) {
+    const initName = message.find(".initName")[0].textContent;
+    const initBase = parseInt(message.find(".initBase")[0].textContent);
+    var initCoins = parseInt(message.find(".initCoins")[0].textContent);
+    const initCoinPower = parseInt(message.find(".initCoinPower")[0].textContent);
+    const initCoinSign = initCoinPower < 0 ? "" : "+";
+
+    // TODO Handle unopposed stuff
+    const tarName = message.find(".tarName")[0].textContent;
+    const tarBase = parseInt(message.find(".tarBase")[0].textContent);
+    var tarCoins = parseInt(message.find(".tarCoins")[0].textContent);
+    const tarCoinPower = parseInt(message.find(".tarCoinPower")[0].textContent);
+    const tarCoinSign = tarCoinPower < 0 ? "" : "+";
+
+    const initHeads = getHeads(initCoins);
+    const tarHeads = getHeads(tarCoins);
+
+    const initTotal = initBase + initHeads.reduce((a,b) => a+b, 0) * initCoinPower;
+    const tarTotal = tarBase + tarHeads.reduce((a,b) => a+b, 0) * tarCoinPower;
+    if (initTotal > tarTotal) {
+        // Initiator wins
+        tarCoins--;
+    }
+    else if (initTotal < tarTotal) {
+        // Target wins
+        initCoins--;
+    }
+
+    let initImg = coinImg(initHeads);
+    let tarImg = coinImg(tarHeads);
+
+    ChatMessage.create({
+        content: `
+<div class="clash-message">
+
+<div class="hidden-data">
+	<span class="initBase">${initBase}</span>
+	<span class="initCoins">${initCoins}</span>
+	<span class="initCoinPower">${initCoinSign}${initCoinPower}</span>
+
+	<span class="tarBase">${tarBase}</span>
+	<span class="tarCoins">${tarCoins}</span>
+	<span class="tarCoinPower">${tarCoinSign}${tarCoinPower}</span>
+</div>
+
+<h1>
+	${initName}
+	<span class="resource-input-seperator"> vs </span>
+	${tarName}
+</h1>
+<div class="grid-2col">
+	<div class="clash-message-column">
+		<h1 class="initName">${initName}</h1>
+		<h2 class="initTotal">${initTotal}</h2>
+		<h3>
+			<span class="initBase">${initBase}</span>
+			<span class="initCoinPower">${initCoinSign}${initCoinPower}</span>
+			${initImg}
+		</h3>
+
+	</div>
+	<div class="clash-message-column">
+		<h1 class="tarName">${tarName}</h1>
+		<h2 class="tarTotal">${tarTotal}</h2>
+		<h3>
+			<span class="tarBase">${tarBase}</span>
+			<span class="tarCoinPower">${tarCoinSign}${tarCoinPower}</span>
+			${tarImg}
+		</h3>
+
+	</div>
+</div>
+
+<div class="grid-2col">
+	<button class="clash-continue">Start</button>
+	<button class="clash-skip">Skip to End</button>
+</div>
+
+</div>
+`
+    });
+
+
+}
+
+function clashSkip() {
+
+}
+
+/* -------------------------------------------- */
+/*  Init Hook For Chat Buttons                  */
+/* -------------------------------------------- */
+
+Hooks.on('init', function () {
+    $(document).on('click', '.clash-continue', function () {
+        clashContinue($(this).closest(".clash-message"));
+    });
+    //$(document).on('click', '.clash-skip', function () {});
+});
+
+/* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
 
@@ -67,37 +196,60 @@ Handlebars.registerHelper('toLowerCase', function (str) {
     return str.toLowerCase();
 });
 
+Handlebars.registerHelper('basePower', function ( item ) {
+    return item.getBasePower();
+});
+
+Handlebars.registerHelper('coinCount', function ( item ) {
+    return item.getCoinCount();
+});
+
+Handlebars.registerHelper('coinPower', function ( item ) {
+    return item.getCoinPower();
+});
+
+Handlebars.registerHelper('skillLibrary', function ( actor ) {
+    return actor.getSkills();
+});
+
+Handlebars.registerHelper('maxPower', function ( item ) {
+    return item.getBasePower() + item.getCoinCount() * item.getCoinPower();
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
+
 
 Hooks.once('ready', function () {
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
     Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
 
     // Greeting message c:
-    ChatMessage.create({
-        content: "New Session Starts Here.",
-        buttons: {
-            button1: {
-                label: "Button #1",
-                callback: () => {ui.notifications.info("Button #1 Clicked!")},
-                icon: `<i class="fas fa-check"></i>`
-            }
-        }
-    });
+    // ChatMessage.create({
+    //     content: `<h1>hi</h1> <button>Test</button>`,
+    // });
 
-    // const dialog_test = new Dialog({
-    //     title: "Title",
-    //     content: "content",
-    //     buttons: {
-    //         button1: {
-    //             label: "Button #1",
-    //             callback: () => {ui.notifications.info("Button #1 Clicked!")},
-    //             icon: `<i class="fas fa-check"></i>`
-    //         }
-    //     }
-    // }).render(true);
+	// let d = new Dialog({
+	// 	title: "Test Dialog",
+	// 	content: "<p>You must choose either Option 1, or Option 2</p>",
+	// 	buttons: {
+	// 		one: {
+	// 			icon: '<i class="fas fa-check"></i>',
+	// 			label: "Option One",
+	// 			callback: () => console.log("Chose One")
+	// 		},
+	// 		two: {
+	// 			icon: '<i class="fas fa-times"></i>',
+	// 			label: "Option Two",
+	// 			callback: () => console.log("Chose Two")
+	// 		}
+	// 	},
+	// 	default: "two",
+	// 	render: html => console.log("Register interactivity in the rendered dialog"),
+	// 	close: html => console.log("This always is logged no matter which option is chosen")
+	// });
+	// d.render(true);
 });
 
 /* -------------------------------------------- */
@@ -165,3 +317,4 @@ function rollItemMacro(itemUuid) {
         item.roll();
     });
 }
+

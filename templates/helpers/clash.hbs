@@ -1,0 +1,71 @@
+<form class='clash-window'>
+
+	<div class="grid-2col">
+
+	<div class='initiator'>
+
+		<h1 class="clash-initiator">{{clash.initiator.name}}</h1>
+
+		<h2>
+			Using: {{clash.initSkill.name}}
+			<select name='clash-init-skill' class='clash-init-skill'>
+				<option value='null'>
+					Change Skill
+				</option>
+			{{#each skillLibrary}}
+				<option value='{{this.id}}'>
+					{{this.name}}
+				</option>
+			{{else}}
+				<option class='Unavailable'>
+					Unopposed
+				</option>
+			{{/each}}
+			</select>
+		</h2>
+
+		<h3>Rolls {{basePower clash.initSkill}} - {{maxPower clash.initSkill}}</h3>
+
+	</div>
+
+	<div class='target-name'>
+
+		<h1>
+			{{clash.target.name}}
+			<select name="clash-target" class="clash-target">
+				<option value='null'>
+					Change Target
+				</option>
+				{{#each actors}}
+					<option value="{{this.id}}">{{this.name}}</option>
+				{{/each}}
+			</select>
+		</h1>
+
+		<h2>
+			Using: {{clash.tarSkill.name}}
+			<select name="clash-oppose" class="clash-oppose">
+				<option value='null'>
+					Change Skill
+				</option>
+				{{#each (skillLibrary clash.target)}}
+					<option value="{{this.id}}" class="opposing-skill">
+						{{this.name}}
+					</option>
+				{{else}}
+					<option class="unopposed-skill">
+						Unopposed
+					</option>
+				{{/each}}
+			</select>
+		</h2>
+
+		<h3>Rolls {{basePower clash.tarSkill}} - {{maxPower clash.tarSkill}}</h3>
+
+	</div>
+	</div>
+
+	<button class="trigger-button">
+		Clash!!!
+	</button>
+</form>
