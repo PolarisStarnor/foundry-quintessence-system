@@ -26,12 +26,27 @@
 				"coin_count_mod": 0,
 				"coin_power_mod": 0,
 				"base_power_mod": 0,
-				"burn": 0,
-				"bleed": 0,
-				"sinking": 0,
+				"burn": {
+					"potency": 0,
+					"count": 0
+				},
+				"bleed": {
+					"potency": 0,
+					"count": 0
+				},
+				"sinking": {
+					"potency": 0,
+					"count": 0
+},
+				"rupture": {
+					"potency": 0,
+					"count": 0
+},
+				"tremor": {
+					"potency": 0,
+					"count": 0
+},
 				"paralysis": 0,
-				"rupture": 0,
-				"tremor": 0,
 				"haste": 0,
 				"bind": 0
 			}
