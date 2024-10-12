@@ -5,15 +5,17 @@ export class ClashHandler {
 
     }
 
-    dataFormat (data) {
+    dataFormat (data, outer=true) {
         let doc = document.createElement("div");
-        doc.classList.add("hidden-data");
+        if (outer)
+            doc.classList.add("hidden-data");
 
+        var datum
         for (let pair of Object.entries(data)) {
             if (typeof(pair[1]) === "object") {
-                const datum = this.dataFormat(pair[1]);
+                datum = this.dataFormat(pair[1], false);
             } else {
-                const datum = document.createElement("span");
+                datum = document.createElement("span");
                 datum.textContent = pair[1];
             }
             datum.classList.add(pair[0]);
@@ -28,7 +30,7 @@ export class ClashHandler {
             if (this.intRegex.test(element.textContent))
                 // NOTE: Everything in javascript is a float anyway so this should be fine riiiiiight?
                 data[$(element).attr('class')] = parseFloat(element.textContent, 10)
-            else if (this.element.tagName === "DIV") {
+            else if (element.tagName === "DIV") {
                 data[$(element).attr('class')] = this.dataDecode(element);
             } else
                 data[$(element).attr('class')] = element.textContent
