@@ -1,7 +1,7 @@
 export class ClashHandler {
-	// Does this actually need a constructor? Probably not
+	// This should probably be a singleton?
 	constructor() {
-		this.intRegex = /^(\+|-)?\d+$/
+		this.intRegex = /^(\+|-)?\d+(\.d+)?$/
 
 	}
 
@@ -22,7 +22,8 @@ export class ClashHandler {
 		let data = {}
 		for (let element of div.children) {
 			if (this.intRegex.test(element.textContent))
-				data[$(element).attr('class')] = parseInt(element.textContent, 10)
+                // NOTE: Everything in javascript is a float anyway so this should be fine riiiiiight?
+				data[$(element).attr('class')] = parseFloat(element.textContent, 10)
 			else
 				data[$(element).attr('class')] = element.textContent
 		}
@@ -77,9 +78,10 @@ export class ClashHandler {
 		// Iterate a damage or a clash depending on remaining coins
 		if (this.data.initCoins <= 0 ||
 			this.data.tarCoins  <= 0) {
-			this.attackContinue()
+			this.attackOnce()
+            this.createClashMessage(this.data, clashType.attack);
 		} else {
-			this.clashContinue()
+			this.clashOnce();
 			this.createClashMessage(this.data, clashType.clash);
 		}
 	}
@@ -93,7 +95,9 @@ export class ClashHandler {
         while (this.data.initCoins && this.data.tarCoins) {
             this.clashOnce();
         }
+        // get winner
         const initWin = data.initCoins ? true : false;
+        // get coins and damage
         const rolls = initWin
               ? this.roll(this.data.initCoins, 0.5)
               : this.roll(this.data.tarCoins, 0.5);
@@ -101,6 +105,8 @@ export class ClashHandler {
               ? this.damageCalc(this.data.initBase, this.data.initCoinPower, rolls)
               : this.damageCalc(this.data.initBase, this.data.initCoinPower, rolls);
 
+        // TODO write a chat message
+        this.clashWindow(this.data, clashType.final);
 	}
 
 	clashOnce () {
@@ -118,32 +124,39 @@ export class ClashHandler {
 		this.data.initTotal < this.data.tarTotal ? this.data.initCoins-- : null;
 	}
 
-	attackContinue() {
+	attackOnce() {
 		// When this function is called, assume that one of the two coins are 0
-        const initWin = data.initCoins ? true : false;
-		roll = this.rollOnce(0.5);
-		if (this.data.initRolled === undefined)
-			this.data.initRolled = 1;
-		else
-			this.data.initRolled += 1
-
+        const initWin = this.data.initCoins ? true : false;
+		const roll = this.rollOnce(0.5);
+        this.data.rolled = this.data.rolled === undefined
+            ? 1
+            : this.data.rolled + 1;
 	}
 
 	createClashMessage(data=this.data, type=clashType.init){
+        // Host element encompassing chatmessage
 		let content = document.createElement("div");
 		content.classList.add("clash-message");
 
+        //Format the data
 		content.appendChild(this.dataFormat(data));
+        // Get the two combatants
 		content.appendChild(this.clashTitle(data));
 
+        // If this is init, treat things as all tails
 		if (type == clashType.init) {
 			data.initRolls = this.roll(data.initCoins, 0);
 			data.tarRolls = this.roll(data.tarCoins, 0);
 		}
+
+        //Make the window
 		content.appendChild(this.clashWindow(data, type));
-		content.appendChild(this.clashButtons());
-		console.log(content);
-		console.log(data);
+
+        // If the clash is not fnished, prepare buttons to continue
+        if (type != clashType.final)
+            content.appendChild(this.clashButtons());
+
+        //Create the message
 		ChatMessage.create({
 			content: content.outerHTML,
 		})
@@ -159,40 +172,53 @@ ${data.tarName}`
 	}
 
 	clashWindow(data, type) {
+        // Create window that is a 2-column grid
 		let window = document.createElement("div");
 		window.classList.add("grid-2col");
 
-		// TODO More abstracting than this copy-paste garbage
-		// Or not because I only need these two nerds
-		let initWindow = document.createElement("div");
-		initWindow.classList.add("clash-message-column");
-		initWindow.appendChild(this._h1(data.initName));
-		if (type == clashType.init)
-			initWindow.appendChild(this._h2(data.initTotal));
-		initWindow.appendChild(this._clashVis(data.initBase, data.initCoinPower, data.initRolls));
+        // Initiator's window
+		const initWindow = this.initWindow(data, type, false)
 
-		let tarWindow = document.createElement("div");
-		tarWindow.classList.add("clash-message-column");
-		tarWindow.appendChild(this._h1(data.tarName));
-		if (type == clashType.init)
-			tarWindow.appendChild(this._h2(data.tarTotal));
-		tarWindow.appendChild(this._clashVis(data.tarBase, data.tarCoinPower, data.tarRolls));
-
-		if (data.initTotal > data.tarTotal) {
-			initWindow.classList.add("clash-winner");
-			tarWindow.classList.add("clash-loser");
-		} else if (data.initTotal < data.tarTotal){
-			initWindow.classList.add("clash-loser");
-			tarWindow.classList.add("clash-winner");
-		} else if (type != clashType.init) {
-			tarWindow.classList.add("clash-loser");
-			initWindow.classList.add("clash-loser");
-		}
+        // Target's window (literally the exact same)
+        const tarWindow = this.tarWindow(data, type, false)
 
 		window.appendChild(initWindow);
 		window.appendChild(tarWindow);
 		return window;
 	}
+
+    initWindow(data, type, winner) {
+        const window = document.createElement("div");
+        window.classList.add("clash-message-column");
+        window.appendChild(this._h1(data.initName));
+		if (type == clashType.clash)
+			window.appendChild(this._h2(data.initTotal));
+		window.appendChild(this._clashVis(data.initBase, data.initCoinPower, data.initRolls));
+
+        if (winner)
+            window.classList.add("clash-winner")
+        else
+            window.classList.add("clash-loser")
+
+        return window;
+    }
+
+    // Probably hilariously scuffed implementation because of how I did the two windows
+    tarWindow(data, type, winner) {
+        const window = document.createElement("div");
+        window.classList.add("clash-message-column");
+        window.appendChild(this._h1(data.tarName));
+		if (type == clashType.clash)
+			window.appendChild(this._h2(data.tarTotal));
+		window.appendChild(this._clashVis(data.tarBase, data.tarCoinPower, data.tarRolls));
+
+        if (winner)
+            window.classList.add("clash-winner")
+        else
+            window.classList.add("clash-loser")
+
+        return window;
+    }
 
 	clashButtons() {
 		let element = document.createElement("div");
@@ -235,5 +261,6 @@ ${data.tarName}`
 const clashType = {
 	init: 0,
 	clash: 1,
-	attack: 2
+	attack: 2,
+    final: 3
 }
