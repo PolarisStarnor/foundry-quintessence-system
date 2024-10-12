@@ -30,19 +30,37 @@ export class Clash {
             return;
         }
 
+        const init = clashDatum(
+            this.initiator.name,
+            this.initSkill.getBasePower(),
+            this.initSkill.getCoinCount(),
+            this.initSkill.getCoinPower()
+        );
+
+        const tar = clashDatum(
+            this.target.name,
+            this.tarSkill.getBasePower(),
+            this.tarSkill.getCoinCount(),
+            this.tarSkill.getCoinPower()
+        );
+
         const data = {
-            initName: this.initiator.name,
-            initBase: this.initSkill.getBasePower(),
-            initCoins: this.initSkill.getCoinCount(),
-            initCoinPower: this.initSkill.getCoinPower(),
-            tarName: this.target.name,
-            tarBase: this.tarSkill.getBasePower(),
-            tarCoins: this.tarSkill.getCoinCount(),
-            tarCoinPower: this.tarSkill.getCoinPower(),
+            init: init,
+            tar: tar
         }
 
         const handler = new ClashHandler();
         handler.createClashMessage(data);
 
      }
+}
+
+
+class clashDatum {
+    constructor(name, base, coins, coinPower) {
+        this.name = name;
+        this.base = base;
+        this.coins = coins;
+        this.coinPower = coinPower
+    }
 }
