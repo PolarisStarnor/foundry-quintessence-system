@@ -78,8 +78,6 @@ export class ClashHandler {
         let history = this.data.history;
         const rolls = []
 
-        console.log(history.toString(2))
-
         let i = 0;
         for (i; i < rolled; i++) {
             rolls.unshift(history & 1);
@@ -121,12 +119,13 @@ export class ClashHandler {
         }
         // TODO get coins and damage
         const coins = this.data.init.winner ? this.data.init.coins : this.data.tar.coins;
-        while (this.data.rolled <= coins) {
-            this.attackOnce();
+        var sync = clashType.attack;
+        while (sync != clashType.final) {
+            sync = this.attackOnce();
         }
 
         // TODO write a chat message
-        this.clashWindow(this.data, clashType.final);
+        this.createClashMessage(this.data, clashType.final);
     }
 
     clashOnce () {
