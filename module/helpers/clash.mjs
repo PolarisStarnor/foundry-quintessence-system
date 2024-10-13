@@ -30,14 +30,14 @@ export class Clash {
             return;
         }
 
-        const init = clashDatum(
+        const init = new clashDatum(
             this.initiator.name,
             this.initSkill.getBasePower(),
             this.initSkill.getCoinCount(),
             this.initSkill.getCoinPower()
         );
 
-        const tar = clashDatum(
+        const tar = new clashDatum(
             this.target.name,
             this.tarSkill.getBasePower(),
             this.tarSkill.getCoinCount(),

@@ -104,12 +104,13 @@ export class ClashHandler {
             this.clashOnce();
         }
         // get winner
-        const init.Win = data.init.coins ? true : false;
+        data.init.win = data.init.coins ? true : false;
+        data.tar.win = !init.win
         // get coins and damage
-        const rolls = init.Win
+        const rolls = init.win
               ? this.roll(this.data.init.coins, 0.5)
               : this.roll(this.data.tar.coins, 0.5);
-        const damage = init.Win
+        const damage = init.win
               ? this.damageCalc(this.data.init.base, this.data.init.coinPower, rolls)
               : this.damageCalc(this.data.init.base, this.data.init.coinPower, rolls);
 
@@ -134,14 +135,15 @@ export class ClashHandler {
 
     attackOnce() {
         // When this function is called, assume that one of the two coins are 0
-        const init.Win = this.data.init.coins ? true : false;
+        this.data.init.win = this.data.init.coins ? true : false;
+        this.data.tar.win = !this.data.init.win
         const roll = this.rollOnce(0.5);
         this.data.rolled = this.data.rolled === undefined
             ? 1
             : this.data.rolled + 1;
     }
 
-    createClashMessage(data=this.data, type=clashType.init.){
+    createClashMessage(data=this.data, type=clashType.init){
         // Host element encompassing chatmessage
         let content = document.createElement("div");
         content.classList.add("clash-message");
@@ -152,7 +154,7 @@ export class ClashHandler {
         content.appendChild(this.clashTitle(data));
 
         // If this is init., treat things as all tails
-        if (type == clashType.init.) {
+        if (type == clashType.init) {
             data.init.rolls = this.roll(data.init.coins, 0);
             data.tar.rolls = this.roll(data.tar.coins, 0);
         }
@@ -185,40 +187,23 @@ ${data.tar.name}`
         window.classList.add("grid-2col");
 
         // Init.iator's window
-        const init.Window = this.init.Window(data, type, false)
-        const tar.Window = this.tar.Window(data, type, false)
+        const initWindow = this.charWindow(data.init, type)
+        const tarWindow = this.charWindow(data.tar, type)
 
-        window.appendChild(init.Window);
-        window.appendChild(tar.Window);
+        window.appendChild(initWindow);
+        window.appendChild(tarWindow);
         return window;
     }
 
-    init.Window(data, type, winner) {
+    charWindow(charData, type, winner) {
         const window = document.createElement("div");
         window.classList.add("clash-message-column");
-        window.appendChild(this._h1(data.init.name));
+        window.appendChild(this._h1(charData.name));
         if (type == clashType.clash)
-            window.appendChild(this._h2(data.init.total));
-        window.appendChild(this._clashVis(data.init.base, data.init.coinPower, data.init.rolls));
+            window.appendChild(this._h2(charData.total));
+        window.appendChild(this._clashVis(charData.base, charData.coinPower, charData.rolls));
 
-        if (winner)
-            window.classList.add("clash-winner")
-        else
-            window.classList.add("clash-loser")
-
-        return window;
-    }
-
-    // Probably hilariously scuffed implementation because of how I did the two windows
-    tar.Window(data, type, winner) {
-        const window = document.createElement("div");
-        window.classList.add("clash-message-column");
-        window.appendChild(this._h1(data.tar.name));
-        if (type == clashType.clash)
-            window.appendChild(this._h2(data.tar.total));
-        window.appendChild(this._clashVis(data.tar.base, data.tar.coinPower, data.tar.rolls));
-
-        if (winner)
+        if (charData.winner)
             window.classList.add("clash-winner")
         else
             window.classList.add("clash-loser")
