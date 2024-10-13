@@ -50,16 +50,6 @@ export class ClashHandler {
         return Math.random() < headsProb ? 1 : 0;
     }
 
-    damageCalc(base, coinPower, rolls) {
-        var total = base;
-        var incr = base;
-        for (const roll of rolls) {
-            incr += roll * coinPower;
-            total += incr;
-        }
-        return total;
-    }
-
     clashCalc(base, coinPower, rolls) {
         return base + coinPower * rolls.reduce((a,b) => a+b, 0)
     }
@@ -67,15 +57,41 @@ export class ClashHandler {
     calcImages(coin_order) {
         const tail_img = `<img class="chat-coin-img" src="systems/foundry-quintessence-system/assets/tails.png" width=16/>`
         const head_img = `<img class="chat-coin-img" src="systems/foundry-quintessence-system/assets/heads.png" width=16/>`
+        const unused_img = `<img class="chat-coin-img unused-coin" src="systems/foundry-quintessence-system/assets/tails.png" width=16/>`
 
         var res = ""
         for(const x of coin_order){
-            if (x)
+            if (x === 1)
                 res += head_img;
+            else if (x === -1)
+                res += unused_img;
             else
                 res += tail_img;
         }
         return res;
+    }
+
+    historyConvert() {
+        const winner = this.data.init.coins ? this.data.init : this.data.tar;
+        const coins = winner.coins;
+        const rolled = this.data.rolled;
+        let history = this.data.history;
+        const rolls = []
+
+        console.log(history.toString(2))
+
+        let i = 0;
+        for (i; i < rolled; i++) {
+            rolls.unshift(history & 1);
+            history >>= 1;
+        }
+        console.log(rolls)
+        for (i; i < coins; i++) {
+            rolls.push(-1);
+        }
+        console.log(rolls)
+        return rolls
+
     }
 
     iterateOnce (message) {
@@ -86,8 +102,8 @@ export class ClashHandler {
         // Iterate a damage or a clash depending on remaining coins
         if (this.data.init.coins <= 0 ||
             this.data.tar.coins  <= 0) {
-            this.attackOnce()
-            this.createClashMessage(this.data, clashType.attack);
+            const type = this.attackOnce()
+            this.createClashMessage(this.data, type);
         } else {
             this.clashOnce();
             this.createClashMessage(this.data, clashType.clash);
@@ -103,22 +119,18 @@ export class ClashHandler {
         while (this.data.init.coins && this.data.tar.coins) {
             this.clashOnce();
         }
-        // get winner
-        data.init.win = data.init.coins ? true : false;
-        data.tar.win = !init.win
-        // get coins and damage
-        const rolls = init.win
-              ? this.roll(this.data.init.coins, 0.5)
-              : this.roll(this.data.tar.coins, 0.5);
-        const damage = init.win
-              ? this.damageCalc(this.data.init.base, this.data.init.coinPower, rolls)
-              : this.damageCalc(this.data.init.base, this.data.init.coinPower, rolls);
+        // TODO get coins and damage
+        const coins = this.data.init.winner ? this.data.init.coins : this.data.tar.coins;
+        while (this.data.rolled <= coins) {
+            this.attackOnce();
+        }
 
         // TODO write a chat message
         this.clashWindow(this.data, clashType.final);
     }
 
     clashOnce () {
+        if (this.data.init.coins === 0 || this.data.init.coins === 0) return;
 
         // Get rolls
         this.data.init.rolls = this.roll(this.data.init.coins, 0.5);
@@ -129,18 +141,41 @@ export class ClashHandler {
         this.data.tar.total = this.clashCalc(this.data.tar.base, this.data.tar.coinPower, this.data.tar.rolls);
 
         // Adjust coins
-        this.data.init.total > this.data.tar.total ? this.data.tar.coins-- : null;
-        this.data.init.total < this.data.tar.total ? this.data.init.coins-- : null;
+        this.data.init.winner = false;
+        this.data.tar.winner = false;
+        if (this.data.init.total > this.data.tar.total) {
+            this.data.tar.coins--;
+            this.data.init.winner = true;
+        } else if (this.data.init.total < this.data.tar.total) {
+            this.data.init.coins--;
+            this.data.tar.winner = true;
+        }
     }
 
     attackOnce() {
-        // When this function is called, assume that one of the two coins are 0
-        this.data.init.win = this.data.init.coins ? true : false;
-        this.data.tar.win = !this.data.init.win
-        const roll = this.rollOnce(0.5);
-        this.data.rolled = this.data.rolled === undefined
-            ? 1
-            : this.data.rolled + 1;
+        // Needs this for unopposed strikes
+        const winner = this.data.init.coins ? this.data.init : this.data.tar;
+        this.data.init.winner = winner === this.data.init ? true : false;
+        this.data.tar.winner = winner === this.data.tar ? true : false;
+
+        // Lots of default values because undefined stuff can exist in this weird shift I have
+        const roll = this.rollOnce(0.5)
+        const base = winner.base;
+        const coinPower = winner.coinPower;
+        const coins = winner.coins;
+        this.data.rolled = this.data.rolled === undefined ? 1 : this.data.rolled + 1;
+        this.data.history = this.data.history === undefined ? 0 : this.data.history;
+        this.data.damage = this.data.damage === undefined ? 0 : this.data.damage;
+        this.data.incr = this.data.incr === undefined ? base : this.data.incr;
+
+        this.data.history <<= 1; // Oh I hate this with all my heart, but if I parse full JSONs in this I will cry
+        this.data.history += roll
+        this.data.incr += coinPower * roll;
+        this.data.damage += this.data.incr;
+
+        if (this.data.rolled >= coins)
+            return clashType.final
+        return clashType.attack
     }
 
     createClashMessage(data=this.data, type=clashType.init){
@@ -187,26 +222,51 @@ ${data.tar.name}`
         window.classList.add("grid-2col");
 
         // Init.iator's window
-        const initWindow = this.charWindow(data.init, type)
-        const tarWindow = this.charWindow(data.tar, type)
+        let initWindow
+        let tarWindow
+        if (type === clashType.clash || type === clashType.init){
+            initWindow = this.clashFrame(data.init)
+            tarWindow = this.clashFrame(data.tar)
+        } else if (type === clashType.attack || type === clashType.final) {
+            initWindow = this.attackFrame(data.init);
+            tarWindow = this.attackFrame(data.tar);
+        }
 
         window.appendChild(initWindow);
         window.appendChild(tarWindow);
         return window;
     }
 
-    charWindow(charData, type, winner) {
+    clashFrame(charData) {
         const window = document.createElement("div");
         window.classList.add("clash-message-column");
         window.appendChild(this._h1(charData.name));
-        if (type == clashType.clash)
-            window.appendChild(this._h2(charData.total));
+
+        window.appendChild(this._h2(charData.total));
         window.appendChild(this._clashVis(charData.base, charData.coinPower, charData.rolls));
 
         if (charData.winner)
             window.classList.add("clash-winner")
         else
             window.classList.add("clash-loser")
+
+        return window;
+    }
+
+    attackFrame(charData) {
+        const window = document.createElement("div");
+        window.classList.add("clash-message-column");
+        window.appendChild(this._h1(charData.name));
+
+
+        if (charData.winner) {
+            window.classList.add("clash-winner")
+            window.appendChild(this._h2(this.data.damage));
+            window.appendChild(this._h3(this.data.incr));
+            window.appendChild(this._clashVis(charData.base, charData.coinPower, this.historyConvert()));
+        } else {
+            window.classList.add("clash-loser")
+        }
 
         return window;
     }
@@ -227,6 +287,12 @@ ${data.tar.name}`
 
     _h2(name) {
         let element = document.createElement("h2");
+        element.textContent = name;
+        return element;
+    }
+
+    _h3(name) {
+        let element = document.createElement("h3");
         element.textContent = name;
         return element;
     }

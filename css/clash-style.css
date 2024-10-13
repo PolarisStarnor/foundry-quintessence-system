@@ -36,5 +36,5 @@ img .chat-coin-img {
 }
 
 img .unused-coin {
-    brightness: 0%;
+    filter: brightness(0%);
 }
