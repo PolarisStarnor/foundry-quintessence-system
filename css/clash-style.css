@@ -1,0 +1,41 @@
+.clash-target{
+	min-width: 256px;
+	height: 50px;
+	padding: 4px;
+}
+
+.name-clash{
+	width: 99%;
+}
+
+.trigger-button {
+	width: 98%;
+	position: absolute;
+	bottom: 0;
+}
+
+.hidden-data {
+	visibility: hidden;
+	font-size: 0px;
+}
+
+.clash-message{
+	text-align: center;
+}
+
+.clash-winner {
+	background-color: rgba(185, 150, 0, 0.55);
+}
+
+.clash-loser {
+	background-color: rgba(185, 150, 0, 0.25);
+}
+
+.chat-coin-img {
+	border: none !important;
+}
+
+.unused-coin {
+    filter: brightness(30%);
+    opacity: .3;
+}

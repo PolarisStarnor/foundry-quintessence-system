@@ -1,33 +1,32 @@
 {
-  "QUINTESSENCE_SYS": {
-    "Ability": {
-      "Min": { "long": "Min. Speed", "abbr": "speed_min" },
-      "Max": { "long": "Max. Speed", "abbr": "speed_max" }
-    },
-    "SheetLabels": {
-      "Actor": "Quintessence Actor Sheet",
-      "Item": "Quintessence Item Sheet"
-    },
-    "Item": {
-    },
-    "Effect": {
-      "Source": "Source",
-      "Toggle": "Toggle Effect",
-      "Temporary": "Temporary Effects",
-      "Passive": "Passive Effects",
-      "Inactive": "Inactive Effects"
-    }
-  },
+		"QUINTESSENCE_SYS": {
+				"Ability": {
+						"Min": { "long": "Min. Speed", "abbr": "speed_min" },
+						"Max": { "long": "Max. Speed", "abbr": "speed_max" }
+				},
+				"SheetLabels": {
+						"Actor": "Quintessence Actor Sheet",
+						"Item": "Quintessence Item Sheet"
+				},
+				"Item": {
+				},
+				"Effect": {
+						"Source": "Source",
+						"Count": "Count",
+						"Active": "Active Effects",
+						"Inactive": "Inactive Effects"
+				}
+		},
 
-  "TYPES": {
-    "Actor": {
-      "character": "Character",
-      "npc": "NPC"
-    },
-    "Item": {
-      "skill": "Skill",
-      "passive": "Passive",
-      "item": "Item"
-    }
-  }
+		"TYPES": {
+				"Actor": {
+						"character": "Character",
+						"npc": "NPC"
+				},
+				"Item": {
+						"skill": "Skill",
+						"passive": "Passive",
+						"item": "Item"
+				}
+		}
 }

@@ -2,6 +2,7 @@
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
+
 export class QuintessenceSystemItem extends Item {
     /**
      * Augment the basic Item data model with additional dynamic data.
@@ -10,6 +11,31 @@ export class QuintessenceSystemItem extends Item {
         // As with the actor class, items are documents that can have their data
         // preparation methods overridden (such as prepareBaseData()).
         super.prepareData();
+    }
+
+    /**
+	 * Get some relevant information for clashes
+	 */
+    getBasePower() {
+        const rollData = { ...this.system };
+        if (!this.actor) return 0;
+        rollData.actor = this.actor.getRollData();
+        return rollData.base + rollData.actor.status.base_power_mod;
+    }
+
+    getCoinCount() {
+        const rollData = { ...this.system };
+        if (!this.actor) return 0;
+        rollData.actor = this.actor.getRollData();
+        return rollData.coins + rollData.actor.status.coin_count_mod;
+    }
+
+    getCoinPower() {
+        const rollData = { ...this.system };
+        // Quit early if there's no parent actor
+        if (!this.actor) return 0;
+        rollData.actor = this.actor.getRollData();
+        return rollData.coin_power + rollData.actor.status.coin_power_mod;
     }
 
     /**
@@ -26,26 +52,32 @@ export class QuintessenceSystemItem extends Item {
 
         // If present, add the actor's roll data
         rollData.actor = this.actor.getRollData();
-        rollData.formula = "@base + @actor.status.base_power_mod + \
-(@coin_power + @actor.status.coin_power_mod) * \
-((@coins + @actor.status.coin_count_mod)d2 - \
-(@coins + @actor.status.coin_count_mod))";
+        rollData.final_base_power = this.getBasePower();
+        rollData.final_coin_count = this.getCoinCount();
+        rollData.final_coin_power = this.getCoinPower();
+        rollData.check = "@final_base_power + @final_coin_power * ((@final_coin_count)d2cs=2)";
+
+        // Iteratively construct this garbage roll formula
+		rollData.damage = "@final_coin_count * @final_base_power"
+        for (let i = rollData.final_coin_count; i > 0; i--) {
+            rollData.damage += "+" + i.toString() + "* @final_coin_power * 1d2cs=2";
+        }
 
         return rollData;
     }
 
     /**
      * Handle clickable rolls.
-     * @param {Event} event   The originating click event
+     * @param {String} type   String identifying the check type
      * @private
      */
-    async roll() {
+    async roll(type) {
         const item = this;
 
         // Initialize chat data.
         const speaker = ChatMessage.getSpeaker({ actor: this.actor });
         const rollMode = game.settings.get('core', 'rollMode');
-        const label = `[${item.type}] ${item.name}`;
+        var label;
 
         // If there's no roll data, send a chat message.
         if (this.system.base === undefined ||
@@ -63,8 +95,23 @@ export class QuintessenceSystemItem extends Item {
             // Retrieve roll data.
             const rollData = this.getRollData();
 
+            var roll;
             // Invoke the roll and submit it to chat.
-            const roll = new Roll(rollData.formula, rollData);
+			if (type === "damage") {
+                roll = new Roll(rollData.damage, rollData);
+                label = `${item.name} Damage`;
+            } else if (type === "check") {
+                roll = new Roll(rollData.check, rollData);
+                label = `${item.name} Check`;
+            } else {
+                ChatMessage.create({
+                    speaker: speaker,
+                    rollMode: rollMode,
+                    flavor: label,
+                    content: "Something went terribly Wrong",
+            	});
+                return;
+            }
             // If you need to store the value first, uncomment the next line.
             // const result = await roll.evaluate();
             roll.toMessage({
@@ -75,4 +122,5 @@ export class QuintessenceSystemItem extends Item {
             return roll;
         }
     }
+
 }

@@ -3,6 +3,17 @@ import {
 	prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
+import {
+    getViewedActors
+} from '../helpers/global.mjs';
+
+import {
+    Clash
+} from '../helpers/clash.mjs';
+
+import {
+    ClashApplication
+} from '../helpers/clash-application.mjs';
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -53,11 +64,6 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 		if (actorData.type == 'character') {
 			this._prepareItems(context);
 			this._prepareCharacterData(context);
-		}
-
-		// Prepare NPC data and items.
-		if (actorData.type == 'npc') {
-			this._prepareItems(context);
 		}
 
 		// Enrich biography info for display
@@ -180,7 +186,22 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 				li.addEventListener('dragstart', handler, false);
 			});
 		}
+
+        // Clash Dialog
+		html.on('click', '.clashable', this._clashDialog.bind(this));
 	}
+
+    /**
+	 * Create a dialog for clashing with other characters
+	 *
+	 */
+    async _clashDialog(event) {
+		event.preventDefault();
+        const clash = new Clash(this.actor)
+		clash.setTarget(getViewedActors()[0]); // Low effort default target
+        const app = new ClashApplication(clash);
+        app.render(true);
+    }
 
 	/**
 	 * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
@@ -221,12 +242,15 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 
 		// Handle item rolls.
 		if (dataset.rollType) {
-			if (dataset.rollType == 'item') {
-				const itemId = element.closest('.item').dataset.itemId;
-				const item = this.actor.items.get(itemId);
-				if (item) return item.roll();
-			}
+			const itemId = element.closest('.item').dataset.itemId;
+			const item = this.actor.items.get(itemId);
+			if (dataset.rollType == 'skill-check') {
+				if (item) return item.roll("check");
+			}else if (dataset.rollType == 'skill-damage') {
+                if (item) return item.roll("damage");
+            }
 		}
+
 
 		// Handle rolls that supply the formula directly.
 		if (dataset.roll) {
@@ -240,4 +264,5 @@ export class QuintessenceSystemActorSheet extends ActorSheet {
 			return roll;
 		}
 	}
+
 }

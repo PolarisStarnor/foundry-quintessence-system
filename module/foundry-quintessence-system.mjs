@@ -7,7 +7,11 @@ import { QuintessenceSystemItemSheet } from './sheets/item-sheet.mjs';
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { QUINTESSENCE_SYS } from './helpers/config.mjs';
+import { ClashHandler } from './helpers/clash-handler.mjs';
 
+/* -------------------------------------------- */
+/*  Functions for Chat Buttons?                 */
+/* -------------------------------------------- */
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
@@ -67,17 +71,41 @@ Handlebars.registerHelper('toLowerCase', function (str) {
     return str.toLowerCase();
 });
 
+Handlebars.registerHelper('basePower', function ( item ) {
+    return item.getBasePower();
+});
+
+Handlebars.registerHelper('coinCount', function ( item ) {
+    return item.getCoinCount();
+});
+
+Handlebars.registerHelper('coinPower', function ( item ) {
+    return item.getCoinPower();
+});
+
+Handlebars.registerHelper('skillLibrary', function ( actor ) {
+    return actor.getSkills();
+});
+
+Handlebars.registerHelper('maxPower', function ( item ) {
+    return item.getBasePower() + item.getCoinCount() * item.getCoinPower();
+});
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
+
 
 Hooks.once('ready', function () {
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
     Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
 
-    // Greeting message c:
-    ChatMessage.create({
-        content: "New Session Starts Here.",
+    const clashHandler = new ClashHandler()
+    $(document).on('click', '.clash-continue', function () {
+        clashHandler.iterateOnce($(this).closest(".clash-message"));
+    });
+    $(document).on('click', '.clash-skip', function () {
+        clashHandler.iterateAll($(this).closest(".clash-message"));
     });
 });
 
@@ -146,3 +174,4 @@ function rollItemMacro(itemUuid) {
         item.roll();
     });
 }
+
