@@ -38,6 +38,10 @@ export class QuintessenceSystemItem extends Item {
         return rollData.coin_power + rollData.actor.status.coin_power_mod;
     }
 
+    getMaxPower() {
+        return this.getBasePower() + this.getCoinCount() * this.getCoinPower();
+    }
+
     /**
      * Prepare a data object which defines the data schema used by dice roll commands against this Item
      * @override
