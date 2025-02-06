@@ -72,15 +72,15 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 });
 
 Handlebars.registerHelper('basePower', function ( item ) {
-    return item.getBasePower();
+    return item.getBasePower === undefined ? 0 : item.getBasePower();
 });
 
 Handlebars.registerHelper('coinCount', function ( item ) {
-    return item.getCoinCount();
+    return item.getCoinCount === undefined ? 0 : item.getCoinCount();
 });
 
 Handlebars.registerHelper('coinPower', function ( item ) {
-    return item.getCoinPower();
+    return item.getCoinPower === undefined ? 0 : item.getCoinPower();
 });
 
 Handlebars.registerHelper('skillLibrary', function ( actor ) {
@@ -88,7 +88,7 @@ Handlebars.registerHelper('skillLibrary', function ( actor ) {
 });
 
 Handlebars.registerHelper('maxPower', function ( item ) {
-    return item.getBasePower() + item.getCoinCount() * item.getCoinPower();
+    return item.getMaxPower === undefined ? 0 : item.getMaxPower();
 });
 
 /* -------------------------------------------- */
