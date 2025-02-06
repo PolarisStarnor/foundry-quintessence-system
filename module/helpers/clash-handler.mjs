@@ -83,11 +83,9 @@ export class ClashHandler {
             rolls.unshift(history & 1);
             history >>= 1;
         }
-        console.log(rolls)
         for (i; i < coins; i++) {
             rolls.push(-1);
         }
-        console.log(rolls)
         return rolls
 
     }
