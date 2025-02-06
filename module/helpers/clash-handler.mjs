@@ -151,9 +151,18 @@ export class ClashHandler {
 
     attackOnce() {
         // Needs this for unopposed strikes
-        const winner = this.data.init.coins ? this.data.init : this.data.tar;
-        this.data.init.winner = winner === this.data.init ? true : false;
-        this.data.tar.winner = winner === this.data.tar ? true : false;
+        var winner;
+        if (this.data.init.coins) {
+            winner = this.data.init
+            this.data.init.winner == true
+            this.data.tar.winner = false
+        } else if (this.data.tar.coins) {
+            winner = this.data.tar
+            this.data.init.winner == false
+            this.data.tar.winner = true
+        } else {
+            return clashType.final
+        }
 
         // Lots of default values because undefined stuff can exist in this weird shift I have
         const roll = this.rollOnce(0.5)
@@ -254,7 +263,6 @@ ${data.tar.name}`
         const window = document.createElement("div");
         window.classList.add("clash-message-column");
         window.appendChild(this._h1(charData.name));
-
 
         if (charData.winner) {
             window.classList.add("clash-winner")
