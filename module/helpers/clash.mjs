@@ -12,8 +12,8 @@ export class Clash {
     }
 
     /**
-	 * Set the target for
-	 * */
+     * Set the target for
+     * */
     setTarget(target) {
         this.target = target;
         // TODO checking for skill-less actors
@@ -21,27 +21,27 @@ export class Clash {
     }
 
     /**
-	 * Actually activate the Clash
-	 * */
+     * Actually activate the Clash
+     * */
     trigger() {
 
         // If there is no target there is no clash.
-		if (!this.target) {
+        if (!this.target) {
             return;
         }
 
         const init = new clashDatum(
             this.initiator.name,
-            this.initSkill.getBasePower(),
-            this.initSkill.getCoinCount(),
-            this.initSkill.getCoinPower()
+            this.initSkill.getBasePower === undefined ? 0 : this.initSkill.getBasePower(),
+            this.initSkill.getCoinCount === undefined ? 0 : this.initSkill.getCoinCount(),
+            this.initSkill.getCoinPower === undefined ? 0 : this.initSkill.getCoinPower()
         );
 
         const tar = new clashDatum(
             this.target.name,
-            this.tarSkill.getBasePower(),
-            this.tarSkill.getCoinCount(),
-            this.tarSkill.getCoinPower()
+            this.tarSkill.getBasePower === undefined ? 0 : this.tarSkill.getBasePower(),
+            this.tarSkill.getCoinCount === undefined ? 0 : this.tarSkill.getCoinCount(),
+            this.tarSkill.getCoinPower === undefined ? 0 : this.tarSkill.getCoinPower()
         );
 
         const data = {
@@ -52,7 +52,7 @@ export class Clash {
         const handler = new ClashHandler();
         handler.createClashMessage(data);
 
-     }
+    }
 }
 
 
