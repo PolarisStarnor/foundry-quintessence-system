@@ -164,7 +164,6 @@ export class ClashHandler {
             return clashType.final
         }
 
-
         // Lots of default values because undefined stuff can exist in this weird shift I have
         const roll = this.rollOnce(0.5)
         const base = winner.base;
