@@ -154,11 +154,11 @@ export class ClashHandler {
         var winner;
         if (this.data.init.coins) {
             winner = this.data.init
-            this.data.init.winner == true
+            this.data.init.winner = true
             this.data.tar.winner = false
         } else if (this.data.tar.coins) {
             winner = this.data.tar
-            this.data.init.winner == false
+            this.data.init.winner = false
             this.data.tar.winner = true
         } else {
             return clashType.final
