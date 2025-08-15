@@ -148,9 +148,9 @@ export class QuintessenceSystemActor extends Actor {
         // }
     }
 
-    rollInitiative(options?) {
-        let ret = super(options?)
-        passTurn()
-        return ret;
-    }
+    // rollInitiative(options?) {
+    //     let ret = super(options?)
+    //     passTurn()
+    //     return ret;
+    // }
 }
