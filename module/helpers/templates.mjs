@@ -9,6 +9,7 @@ export const preloadHandlebarsTemplates = async function () {
     'systems/foundry-quintessence-system/templates/actor/parts/actor-skills.hbs',
     'systems/foundry-quintessence-system/templates/actor/parts/actor-items.hbs',
     'systems/foundry-quintessence-system/templates/actor/parts/actor-passives.hbs',
+    'systems/foundry-quintessence-system/templates/actor/parts/actor-status.hbs',
     'systems/foundry-quintessence-system/templates/actor/parts/actor-effects.hbs',
     // Item partials
     'systems/foundry-quintessence-system/templates/item/parts/item-effects.hbs',
