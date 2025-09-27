@@ -1,6 +1,6 @@
 import {
-	onManageActiveEffect,
-	prepareActiveEffectCategories,
+    onManageActiveEffect,
+    prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
 import {
@@ -21,26 +21,27 @@ const { ActorSheetV2 } = foundry.applications.sheets
  * Extend the basic ActorSheet with some very simple modifications
  */
 export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
-	/** @override */
-	static get defaultOptions() {
-		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ['foundry-quintessence-system', 'sheet', 'actor'],
-			width: 600,
-			height: 600,
-			tabs: [
-				{
-					navSelector: '.sheet-tabs',
-					contentSelector: '.sheet-body',
-					initial: 'features',
-				},
-			],
-		});
-	}
+    /**
+     * Non-method configurations
+     */
+	static DEFAULT_OPTIONS = {
+		classes: ['foundry-quintessence-system', 'sheet', 'actor'],
+        position: {
+            width: 600,
+            height: 600,
+        },
+		tabs: [
+			{
+				navSelector: '.sheet-tabs',
+				contentSelector: '.sheet-body',
+				initial: 'features',
+			},
+        ],
+    }
 
-	/** @override */
-	get template() {
-		return `systems/foundry-quintessence-system/templates/actor/actor-${this.actor.type}-sheet.hbs`;
-	}
+    static PARTS = {
+        template: "systems/foundry-quintessence-system/templates/actor/actor-character-sheet.hbs"
+    }
 
 	/* -------------------------------------------- */
 
@@ -128,7 +129,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 			}
 			// Append to items.
 			else if (i.type === 'item') {
-                            gear.push(i);
+                gear.push(i);
 			}
 		}
 
@@ -170,9 +171,9 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 		html.on('click', '.effect-control', (ev) => {
 			const row = ev.currentTarget.closest('li');
 			const document =
-				row.dataset.parentId === this.actor.id
-					? this.actor
-					: this.actor.items.get(row.dataset.parentId);
+				  row.dataset.parentId === this.actor.id
+				  ? this.actor
+				  : this.actor.items.get(row.dataset.parentId);
 			onManageActiveEffect(ev, document);
 		});
 
