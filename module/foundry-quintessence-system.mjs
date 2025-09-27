@@ -9,6 +9,9 @@ import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { QUINTESSENCE_SYS } from './helpers/config.mjs';
 import { ClashHandler } from './helpers/clash-handler.mjs';
 
+const { HandlebarsApplicationMixin } = foundry.applications.api
+const { ActorSheetV2, ItemSheetV2 } = foundry.applications.sheets
+const { Actors, Items } = foundry.documents.collections
 /* -------------------------------------------- */
 /*  Functions for Chat Buttons?                 */
 /* -------------------------------------------- */
@@ -47,12 +50,12 @@ Hooks.once('init', function () {
     CONFIG.ActiveEffect.legacyTransferral = false;
 
     // Register sheet application classes
-    Actors.unregisterSheet('core', ActorSheet);
+    Actors.unregisterSheet('core', ActorSheetV2);
     Actors.registerSheet('foundry-quintessence-system', QuintessenceSystemActorSheet, {
         makeDefault: true,
         label: 'QUINTESSENCE_SYS.SheetLabels.Actor',
     });
-    Items.unregisterSheet('core', ItemSheet);
+    Items.unregisterSheet('core', ItemSheetV2);
     Items.registerSheet('foundry-quintessence-system', QuintessenceSystemItemSheet, {
         makeDefault: true,
         label: 'QUINTESSENCE_SYS.SheetLabels.Item',
