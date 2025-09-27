@@ -1,6 +1,6 @@
 import {
-  onManageActiveEffect,
-  prepareActiveEffectCategories,
+    onManageActiveEffect,
+    prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
 const { HandlebarsApplicationMixin } = foundry.applications.api
@@ -9,86 +9,93 @@ const { ItemSheetV2 } = foundry.applications.sheets
  * Extend the basic ItemSheet with some very simple modifications
  */
 export class QuintessenceSystemItemSheet extends ItemSheetV2 {
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ['foundry-quintessence-system', 'sheet', 'item'],
-      width: 520,
-      height: 480,
-      tabs: [
-        {
-          navSelector: '.sheet-tabs',
-          contentSelector: '.sheet-body',
-          initial: 'description',
+    /**
+     * Non-method configurations
+     */
+    static DEFAULT_OPTIONS = {
+        classes: ['foundry-quintessence-system', 'sheet', 'item'],
+        position: {
+            width: 520,
+            height: 480,
         },
-      ],
-    });
-  }
+        tabs: [
+            {
+                navSelector: '.sheet-tabs',
+                contentSelector: '.sheet-body',
+                initial: 'description',
+            },
+        ],
+    }
 
-  /** @override */
-  get template() {
-    const path = 'systems/foundry-quintessence-system/templates/item';
-    // Return a single sheet for all item types.
-    // return `${path}/item-sheet.hbs`;
+    static PARTS = {
+        template: "systems/foundry-quintessence-system/templates/item/item-sheet.hbs"
+    }
 
-    // Alternatively, you could use the following return statement to do a
-    // unique item sheet by type, like `weapon-sheet.hbs`.
-    return `${path}/item-${this.item.type}-sheet.hbs`;
-  }
 
-  /* -------------------------------------------- */
+    /** @override */
+    get template() {
+        const path = 'systems/foundry-quintessence-system/templates/item';
+        // Return a single sheet for all item types.
+        // return `${path}/item-sheet.hbs`;
 
-  /** @override */
-  async getData() {
-    // Retrieve base data structure.
-    const context = super.getData();
+        // Alternatively, you could use the following return statement to do a
+        // unique item sheet by type, like `weapon-sheet.hbs`.
+        return `${path}/item-${this.item.type}-sheet.hbs`;
+    }
 
-    // Use a safe clone of the item data for further operations.
-    const itemData = this.document.toObject(false);
+    /* -------------------------------------------- */
 
-    // Enrich description info for display
-    // Enrichment turns text like `[[/r 1d20]]` into buttons
-    context.enrichedDescription = await TextEditor.enrichHTML(
-      this.item.system.description,
-      {
-        // Whether to show secret blocks in the finished html
-        secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
-        // Data to fill in for inline rolls
-        rollData: this.item.getRollData(),
-        // Relative UUID resolution
-        relativeTo: this.item,
-      }
-    );
+    /** @override */
+    async getData() {
+        // Retrieve base data structure.
+        const context = super.getData();
 
-    // Add the item's data to context.data for easier access, as well as flags.
-    context.system = itemData.system;
-    context.flags = itemData.flags;
+        // Use a safe clone of the item data for further operations.
+        const itemData = this.document.toObject(false);
 
-    // Adding a pointer to CONFIG.QUINTESSENCE_SYS
-    context.config = CONFIG.QUINTESSENCE_SYS;
+        // Enrich description info for display
+        // Enrichment turns text like `[[/r 1d20]]` into buttons
+        context.enrichedDescription = await TextEditor.enrichHTML(
+            this.item.system.description,
+            {
+                // Whether to show secret blocks in the finished html
+                secrets: this.document.isOwner,
+                // Necessary in v11, can be removed in v12
+                async: true,
+                // Data to fill in for inline rolls
+                rollData: this.item.getRollData(),
+                // Relative UUID resolution
+                relativeTo: this.item,
+            }
+        );
 
-    // Prepare active effects for easier access
-    context.effects = prepareActiveEffectCategories(this.item.effects);
+        // Add the item's data to context.data for easier access, as well as flags.
+        context.system = itemData.system;
+        context.flags = itemData.flags;
 
-    return context;
-  }
+        // Adding a pointer to CONFIG.QUINTESSENCE_SYS
+        context.config = CONFIG.QUINTESSENCE_SYS;
 
-  /* -------------------------------------------- */
+        // Prepare active effects for easier access
+        context.effects = prepareActiveEffectCategories(this.item.effects);
 
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
+        return context;
+    }
 
-    // Everything below here is only needed if the sheet is editable
-    if (!this.isEditable) return;
+    /* -------------------------------------------- */
 
-    // Roll handlers, click handlers, etc. would go here.
+    /** @override */
+    activateListeners(html) {
+        super.activateListeners(html);
 
-    // Active Effect management
-    html.on('click', '.effect-control', (ev) =>
-      onManageActiveEffect(ev, this.item)
-    );
-  }
+        // Everything below here is only needed if the sheet is editable
+        if (!this.isEditable) return;
+
+        // Roll handlers, click handlers, etc. would go here.
+
+        // Active Effect management
+        html.on('click', '.effect-control', (ev) =>
+            onManageActiveEffect(ev, this.item)
+        );
+    }
 }
