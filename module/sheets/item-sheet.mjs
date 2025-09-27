@@ -28,7 +28,9 @@ export class QuintessenceSystemItemSheet extends ItemSheetV2 {
     }
 
     static PARTS = {
-        template: "systems/foundry-quintessence-system/templates/item/item-sheet.hbs"
+        form: {
+            template: 'systems/foundry-quintessence-system/templates/item/item-sheet.hbs'
+        }
     }
 
 
