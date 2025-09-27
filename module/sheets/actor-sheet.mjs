@@ -14,11 +14,13 @@ import {
 import {
     ClashApplication
 } from '../helpers/clash-application.mjs';
+
+const { HandlebarsApplicationMixin } = foundry.applications.api
+const { ActorSheetV2 } = foundry.applications.sheets
 /**
  * Extend the basic ActorSheet with some very simple modifications
- * @extends {ActorSheet}
  */
-export class QuintessenceSystemActorSheet extends ActorSheet {
+export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 	/** @override */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
