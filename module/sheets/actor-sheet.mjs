@@ -17,6 +17,7 @@ import {
 
 const { HandlebarsApplicationMixin } = foundry.applications.api
 const { ActorSheetV2 } = foundry.applications.sheets
+const { TextEditor } = foundry.applications.ux
 /**
  * Extend the basic ActorSheet with some very simple modifications
  */
@@ -25,6 +26,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
      * Non-method configurations
      */
 	static DEFAULT_OPTIONS = {
+        tag: 'form',
 		classes: ['foundry-quintessence-system', 'sheet', 'actor'],
         position: {
             width: 600,
@@ -39,10 +41,34 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         ],
     }
 
+    static TABS = {
+        sheet: {
+            tabs: [
+                {id: 'skills', group: 'sheet', label: "DCC.Skills"},
+                {id: 'passives', group: 'sheet', label: "DCC.Passives"},
+                {id: 'items', group: 'sheet', label: "DCC.Items"},
+                {id: 'effects', group: 'sheet', label: "DCC.Effects"},
+            ],
+            initial: 'skills'
+        }
+    }
+
     static PARTS = {
         form: {
             template: 'systems/foundry-quintessence-system/templates/actor/actor-character-sheet.hbs'
-        }
+        },
+        skills: {
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-skills.hbs'
+        },
+        passives: {
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-passives.hbs'
+        },
+        items: {
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-items.hbs'
+        },
+        effects: {
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-effects.hbs'
+        },
     }
 
 	/* -------------------------------------------- */
@@ -118,27 +144,27 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 		const passives = [];
 		const skills = [];
 
-		// Iterate through items, allocating to containers
-		for (let i of context.items) {
-			i.img = i.img || Item.DEFAULT_ICON;
-			// Append to skills.
-			if (i.type === 'skill') {
-				skills.push(i);
-			}
-			// Append to abilities.
-			else if (i.type === 'passive') {
-				passives.push(i);
-			}
-			// Append to items.
-			else if (i.type === 'item') {
-                gear.push(i);
-			}
-		}
+		// // Iterate through items, allocating to containers
+		// for (let i of context.items) {
+		// 	i.img = i.img || Item.DEFAULT_ICON;
+		// 	// Append to skills.
+		// 	if (i.type === 'skill') {
+		// 		skills.push(i);
+		// 	}
+		// 	// Append to abilities.
+		// 	else if (i.type === 'passive') {
+		// 		passives.push(i);
+		// 	}
+		// 	// Append to items.
+		// 	else if (i.type === 'item') {
+        //         gear.push(i);
+		// 	}
+		// }
 
-		// Assign and return
-		context.gear = gear;
-		context.passives = passives;
-		context.skills = skills;
+		// // Assign and return
+		// context.gear = gear;
+		// context.passives = passives;
+		// context.skills = skills;
 	}
 
 	/* -------------------------------------------- */
