@@ -1,8 +1,18 @@
-<section class="{{cssClass}} {{actor.type}} " autocomplete="off">
+<section class="{{cssClass}} {{actor.type}}" autocomplete="off">
 
   {{!-- Sheet Header --}}
   <header class="sheet-header">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <img
+      class="profile-img"
+      src="{{actor.img}}"
+      {{#if editable}}
+      data-action="editImage"
+      data-edit="img"
+      {{/if}}
+      data-tooltip="{{actor.name}}"
+      height="100" width="100"
+      alt="{{actor.name}}"
+    >
     <div class="header-fields">
 
       <div class="name-clash grid-2col">
