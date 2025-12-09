@@ -1,34 +1,38 @@
 import { getViewedActors } from './global.mjs';
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 
-export class ClashApplication extends FormApplication {
+export class ClashApplication extends HandlebarsApplicationMixin(ApplicationV2) {
 
     constructor(obj) {
         super(obj);
     }
 
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ['form'],
+    static DEFAULT_OPTIONS = {
+        classes: ['doc'],
+        position: {
             width: 800,
             height: 400,
-            popOut: true,
-            template: `systems/foundry-quintessence-system/templates/helpers/clash.hbs`,
-            id: 'clash-application',
+        },
+        window: {
             title: 'Clashing Window',
-            closeOnSubmit: true,
-            submitOnClose: false,
-            submitOnChange: false,
-        });
+        },
+        popOut: true,
+        template: `systems/foundry-quintessence-system/templates/helpers/clash.hbs`,
+        id: 'clash-application',
+        closeOnSubmit: true,
+        submitOnClose: false,
+        submitOnChange: false,
+        tag: 'form'
     }
 
     /** @override */
-    getData() {
+    async _prepareContext(options) {
         const context = super.getData();
         this.actors = getViewedActors();
 
-        context.clash = this.object;
-        context.skillLibrary = this.object.initiator.getSkills();
+        context.clash = this.actor;
+        context.skillLibrary = this.actor.initiator.getSkills();
         context.actors = this.actors;
 
         // Send data for Handlebars to display

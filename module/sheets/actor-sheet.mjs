@@ -18,6 +18,8 @@ import {
 const { HandlebarsApplicationMixin } = foundry.applications.api
 const { ActorSheetV2 } = foundry.applications.sheets
 const { TextEditor } = foundry.applications.ux
+// const { duplicate } = foundry.utils
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  */
@@ -28,6 +30,10 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['foundry-quintessence-system', 'sheet', 'actor'],
+        window: {
+            resizable: true,
+            title: 'DCC.ActorSheetTitle'
+        },
         position: {
             width: 600,
             height: 600,
@@ -39,6 +45,11 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
                 initial: 'features',
             },
         ],
+        form: {
+            handler: QuintessenceSystemActorSheet.formHandler,
+            submitOnChange: false,
+            closeOnSubmit: false
+        }
     }
 
     static TABS = {
@@ -123,6 +134,11 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         return context;
     }
 
+    static async formHandler(event, form, formData) {
+        // TODO
+        return
+    }
+
     /**
      * Character-specific context modifications
      *
@@ -170,8 +186,9 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     /* -------------------------------------------- */
 
     /** @override */
-    activateListeners(html) {
-        super.activateListeners(html);
+    _onRender(context, options) {
+        super._onRender(context, options);
+        const html = $(this.element); // Thing to keep JQuery or smth
 
         // Render the item sheet for viewing/editing prior to the editable check.
         html.on('click', '.item-edit', (ev) => {
