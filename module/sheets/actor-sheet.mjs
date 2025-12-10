@@ -55,10 +55,10 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     static TABS = {
         sheet: {
             tabs: [
-                {id: 'skills', group: 'sheet', label: "DCC.Skills"},
-                {id: 'passives', group: 'sheet', label: "DCC.Passives"},
-                {id: 'items', group: 'sheet', label: "DCC.Items"},
-                {id: 'effects', group: 'sheet', label: "DCC.Effects"},
+                {id: 'skills', label: "DCC.Skills"},
+                {id: 'passives', label: "DCC.Passives"},
+                {id: 'items', label: "DCC.Items"},
+                {id: 'effects', label: "DCC.Effects"},
             ],
             initial: 'skills'
         }
@@ -131,8 +131,22 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
             this.actor.allApplicableEffects()
         );
 
-        console.log(context);
+        // Prepare Tabs
+        context.tabs = this._prepareTabs("sheet");
+
         return context;
+    }
+
+    async _preparePartContext(partId, context) {
+        switch (partId) {
+            case "skills":
+            case "passives":
+            case "items":
+            case "effects":
+            default:
+                context.tab = context.tabs[partId];
+        }
+        return context
     }
 
     static async formHandler(event, form, formData) {
@@ -158,29 +172,29 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
      *
      * @param {object} context The context object to mutate
      */
-    _prepareItems(context) {
+    async _prepareItems(context) {
+
         // Initialize containers.
         const gear = [];
         const passives = [];
         const skills = [];
 
         // // Iterate through items, allocating to containers
-        // for (let i of context.items) {
-        //      i.img = i.img || Item.DEFAULT_ICON;
-        //      // Append to skills.
-        //      if (i.type === 'skill') {
-        //          skills.push(i);
-        //      }
-        //      // Append to abilities.
-        //      else if (i.type === 'passive') {
-        //          passives.push(i);
-        //      }
-        //      // Append to items.
-        //      else if (i.type === 'item') {
+        // for (let i of context.document.items) {
+        //     i.img = i.img || Item.DEFAULT_ICON;
+        //     // Append to skills.
+        //     if (i.type === 'skill') {
+        //         skills.push(i);
+        //     }
+        //     // Append to abilities.
+        //     else if (i.type === 'passive') {
+        //         passives.push(i);
+        //     }
+        //     // Append to items.
+        //     else if (i.type === 'item') {
         //         gear.push(i);
-        //      }
+        //     }
         // }
-
         // // Assign and return
         // context.gear = gear;
         // context.passives = passives;
