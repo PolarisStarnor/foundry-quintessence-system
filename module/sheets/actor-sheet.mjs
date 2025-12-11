@@ -32,7 +32,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         classes: ['foundry-quintessence-system', 'sheet', 'actor'],
         window: {
             resizable: true,
-            title: 'DCC.ActorSheetTitle'
+            title: 'Actor Sheet'
         },
         position: {
             width: 600,
@@ -52,12 +52,12 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     }
 
     static TABS = {
-        sheet: {
+        primary: {
             tabs: [
-                {id: 'skills', label: "Skills"},
-                {id: 'passives', label: "Passives"},
-                {id: 'items', label: "Items"},
-                {id: 'effects', label: "Effects"},
+                {id: 'skills', label: "Skills", group: "primary"},
+                {id: 'passives', label: "Passives", group: "primary"},
+                {id: 'items', label: "Items", group: "primary"},
+                {id: 'effects', label: "Effects", group: "primary"},
             ],
             initial: 'skills'
         }
@@ -134,7 +134,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         );
 
         // Prepare Tabs
-        context.tabs = this._prepareTabs("sheet");
+        context.tabs = this._prepareTabs("primary");
 
         return context;
     }
