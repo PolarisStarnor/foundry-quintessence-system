@@ -41,8 +41,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         tabs: [
             {
                 navSelector: '.sheet-tabs',
-                contentSelector: '.sheet-body',
-                initial: 'features',
+                initial: 'skills',
             },
         ],
         form: {
@@ -55,18 +54,21 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     static TABS = {
         sheet: {
             tabs: [
-                {id: 'skills', label: "DCC.Skills"},
-                {id: 'passives', label: "DCC.Passives"},
-                {id: 'items', label: "DCC.Items"},
-                {id: 'effects', label: "DCC.Effects"},
+                {id: 'skills', label: "Skills"},
+                {id: 'passives', label: "Passives"},
+                {id: 'items', label: "Items"},
+                {id: 'effects', label: "Effects"},
             ],
             initial: 'skills'
         }
     }
 
     static PARTS = {
-        form: {
+        header: {
             template: 'systems/foundry-quintessence-system/templates/actor/actor-character-sheet.hbs'
+        },
+        tabs: {
+            template: 'templates/generic/tab-navigation.hbs',
         },
         skills: {
             template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-skills.hbs'
