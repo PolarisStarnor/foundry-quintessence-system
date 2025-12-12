@@ -2,19 +2,19 @@
   <header class="sheet-header">
     <img
       class="profile-img"
-      src="{{actor.img}}"
+      src="{{document.img}}"
       {{#if editable}}
       data-action="editImage"
       data-edit="img"
       {{/if}}
-      data-tooltip="{{actor.name}}"
+      data-tooltip="{{document.name}}"
       height="100" width="100"
-      alt="{{actor.name}}"
+      alt="{{document.name}}"
     >
     <div class="header-fields">
 
       <div class="name-clash grid-2col">
-        <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+        <h1 class="charname"><input name="name" type="text" value="{{document.name}}" placeholder="Name"/></h1>
         <button class="clashable"><h1>Clash</h1></button>
       </div>
 
@@ -29,18 +29,18 @@
         <div class="resource flex-group-center">
           <label for="system.health.value" class="resource-label">Health</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
+            <input type="text" name="system.health.value" value="{{document.system.health.value}}" data-dtype="Number"/>
             <span class="resource-input-seperator"> / </span>
-            <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
+            <input type="text" name="system.health.max" value="{{document.system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
 
         <div class="resource flex-group-center">
           <label for="system.speed.value" class="resource-label">Speed</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.speed.min" value="{{system.speed.min}}" data-dtype="Number"/>
+            <input type="text" name="system.speed.min" value="{{document.system.speed.min}}" data-dtype="Number"/>
             <span class="resource-input-seperator">—</span>
-            <input type="text" name="system.speed.max" value="{{system.speed.max}}" data-dtype="Number"/>
+            <input type="text" name="system.speed.max" value="{{document.system.speed.max}}" data-dtype="Number"/>
           </div>
         </div>
 

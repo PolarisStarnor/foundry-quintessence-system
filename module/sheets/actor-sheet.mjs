@@ -136,6 +136,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         // Prepare Tabs
         context.tabs = this._prepareTabs("primary");
 
+        console.log(context);
         return context;
     }
 
@@ -174,33 +175,33 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
      *
      * @param {object} context The context object to mutate
      */
-    async _prepareItems(context) {
+    _prepareItems(context) {
 
         // Initialize containers.
         const gear = [];
         const passives = [];
         const skills = [];
 
-        // // Iterate through items, allocating to containers
-        // for (let i of context.document.items) {
-        //     i.img = i.img || Item.DEFAULT_ICON;
-        //     // Append to skills.
-        //     if (i.type === 'skill') {
-        //         skills.push(i);
-        //     }
-        //     // Append to abilities.
-        //     else if (i.type === 'passive') {
-        //         passives.push(i);
-        //     }
-        //     // Append to items.
-        //     else if (i.type === 'item') {
-        //         gear.push(i);
-        //     }
-        // }
-        // // Assign and return
-        // context.gear = gear;
-        // context.passives = passives;
-        // context.skills = skills;
+        // Iterate through items, allocating to containers
+        for (let i of this.document.items) {
+            i.img = i.img || Item.DEFAULT_ICON;
+            // Append to skills.
+            if (i.type === 'skill') {
+                skills.push(i);
+            }
+            // Append to abilities.
+            else if (i.type === 'passive') {
+                passives.push(i);
+            }
+            // Append to items.
+            else if (i.type === 'item') {
+                gear.push(i);
+            }
+        }
+        // Assign and return
+        context.gear = gear;
+        context.passives = passives;
+        context.skills = skills;
     }
 
     /* -------------------------------------------- */
