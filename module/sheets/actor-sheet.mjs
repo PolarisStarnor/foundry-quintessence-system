@@ -104,12 +104,6 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         // Adding a pointer to CONFIG.QUINTESSENCE_SYS
         context.config = CONFIG.QUINTESSENCE_SYS;
 
-        // Prepare character data and items.
-        if (actorData.type == 'character') {
-            this._prepareItems(context);
-            this._prepareCharacterData(context);
-        }
-
         // Enrich biography info for display
         // Enrichment turns text like `[[/r 1d20]]` into buttons
         context.enrichedBiography = await TextEditor.enrichHTML(
@@ -141,13 +135,17 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     }
 
     async _preparePartContext(partId, context) {
+
+        // All Parts do this
+        context.tab = context.tabs[partId];
+        this._prepareItems(context);
+
+        // Part-sensitive processing
         switch (partId) {
             case "skills":
             case "passives":
             case "items":
             case "effects":
-            default:
-                context.tab = context.tabs[partId];
         }
         return context
     }
@@ -158,16 +156,6 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         console.log(form);
         console.log(formData);
         return
-    }
-
-    /**
-     * Character-specific context modifications
-     *
-     * @param {object} context The context object to mutate
-     */
-    _prepareCharacterData(context) {
-        // This is where you can enrich character-specific editor fields
-        // or setup anything else that's specific to this type
     }
 
     /**
