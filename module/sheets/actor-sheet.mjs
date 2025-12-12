@@ -138,13 +138,15 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 
         // All Parts do this
         context.tab = context.tabs[partId];
-        this._prepareItems(context);
 
         // Part-sensitive processing
         switch (partId) {
             case "skills":
+            this._prepareSkills(context);
             case "passives":
+            this._preparePassives(context);
             case "items":
+            this._prepareGear(context);
             case "effects":
         }
         return context
@@ -159,15 +161,13 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
     }
 
     /**
-     * Organize and classify Items for Actor sheets.
+     * Organize and classify Skills for Actor sheets.
      *
      * @param {object} context The context object to mutate
      */
-    _prepareItems(context) {
+    _prepareSkills(context) {
 
         // Initialize containers.
-        const gear = [];
-        const passives = [];
         const skills = [];
 
         // Iterate through items, allocating to containers
@@ -177,19 +177,52 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
             if (i.type === 'skill') {
                 skills.push(i);
             }
-            // Append to abilities.
-            else if (i.type === 'passive') {
-                passives.push(i);
-            }
+        }
+        // Assign and return
+        context.skills = skills;
+    }
+
+    /**
+     * Organize and classify Items for Actor sheets.
+     *
+     * @param {object} context The context object to mutate
+     */
+    _prepareGear(context) {
+
+        // Initialize containers.
+        const gear = [];
+
+        // Iterate through items, allocating to containers
+        for (let i of this.document.items) {
+            i.img = i.img || Item.DEFAULT_ICON;
             // Append to items.
-            else if (i.type === 'item') {
+            if (i.type === 'item') {
                 gear.push(i);
             }
         }
         // Assign and return
         context.gear = gear;
+    }
+
+    /**
+     * Organize and classify Passives for Actor sheets.
+     *
+     * @param {object} context The context object to mutate
+     */
+    _preparePassives(context) {
+
+        // Initialize containers.
+        const passives = [];
+
+        // Iterate through items, allocating to containers
+        for (let i of this.document.items) {
+            // Append to abilities.
+            if (i.type === 'passive') {
+                passives.push(i);
+            }
+        }
+        // Assign and return
         context.passives = passives;
-        context.skills = skills;
     }
 
     /* -------------------------------------------- */
