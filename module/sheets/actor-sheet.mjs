@@ -18,7 +18,7 @@ import {
 const { HandlebarsApplicationMixin } = foundry.applications.api
 const { ActorSheetV2 } = foundry.applications.sheets
 const { TextEditor } = foundry.applications.ux
-// const { duplicate } = foundry.utils
+const { duplicate } = foundry.utils
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -48,6 +48,11 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
             handler: QuintessenceSystemActorSheet.formHandler,
             submitOnChange: false,
             closeOnSubmit: false
+        },
+        actions: {
+            createItem: QuintessenceSystemActorSheet.createItem,
+            deleteItem: QuintessenceSystemActorSheet.deleteItem,
+            editItem: QuintessenceSystemActorSheet.editItem,
         }
     }
 
@@ -71,16 +76,20 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
             template: 'templates/generic/tab-navigation.hbs',
         },
         skills: {
-            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-skills.hbs'
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-skills.hbs',
+            scrollable: ['']
         },
         passives: {
-            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-passives.hbs'
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-passives.hbs',
+            scrollable: ['']
         },
         items: {
-            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-items.hbs'
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-items.hbs',
+            scrollable: ['']
         },
         effects: {
-            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-effects.hbs'
+            template: 'systems/foundry-quintessence-system/templates/actor/parts/actor-effects.hbs',
+            scrollable: ['']
         },
     }
 
@@ -227,58 +236,94 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 
     /* -------------------------------------------- */
 
+    static createItem(event, target) {
+        event.preventDefault();
+        // Get the type of item to create.
+        const type = target.dataset.type;
+        // Grab any data associated with this control.
+        const data = duplicate(target.dataset);
+        // Initialize a default name.
+        const name = `New ${type.capitalize()}`;
+        // Prepare the item object.
+        const itemData = {
+            name: name,
+            type: type,
+            system: data,
+        };
+        console.log("Created Item!")
+        return Item.create(itemData, { parent: this.actor });
+    }
+
+    static editItem(event, target) {
+        event.preventDefault();
+        const element = $(target)
+        const li = element.parents('.item');
+        const item = this.actor.items.get(li.data('itemId'));
+        item.sheet.render(true)
+    }
+
+    static deleteItem(event, target) {
+        event.preventDefault();
+        const element = $(target)
+        const li = element.parents('.item');
+        const item = this.actor.items.get(li.data('itemId'));
+        item.delete();
+        li.slideUp(200,() => this.render(false));
+    }
+
+    // static editItem(event, target) {
+
+    // }
+
     /** @override */
     _onRender(context, options) {
-        super._onRender(context, options);
-        const html = $(this.element); // Thing to keep JQuery or smth
+        // super._onRender(context, options);
+        // const html = $(this.element); // Thing to keep JQuery or smth
 
-        // Render the item sheet for viewing/editing prior to the editable check.
-        html.on('click', '.item-edit', (ev) => {
-            const li = $(ev.currentTarget).parents('.item');
-            const item = this.actor.items.get(li.data('itemId'));
-            item.sheet.render(true);
-        });
+        // // Render the item sheet for viewing/editing prior to the editable check.
+        // html.on('click', '.item-edit', (ev) => {
+        //     const li = $(ev.currentTarget).parents('.item');
+        //     const item = this.actor.items.get(li.data('itemId'));
+        //     item.sheet.render(true);
+        // });
 
-        // -------------------------------------------------------------
-        // Everything below here is only needed if the sheet is editable
-        if (!this.isEditable) return;
+        // // -------------------------------------------------------------
+        // // Everything below here is only needed if the sheet is editable
+        // if (!this.isEditable) return;
 
-        // Add Inventory Item
-        html.on('click', '.item-create', this._onItemCreate.bind(this));
+        // // Delete Inventory Item
+        // html.on('click', '.item-delete', (ev) => {
+        //     const li = $(ev.currentTarget).parents('.item');
+        //     const item = this.actor.items.get(li.data('itemId'));
+        //     item.delete();
+        //     li.slideUp(200, () => this.render(false));
+        // });
 
-        // Delete Inventory Item
-        html.on('click', '.item-delete', (ev) => {
-            const li = $(ev.currentTarget).parents('.item');
-            const item = this.actor.items.get(li.data('itemId'));
-            item.delete();
-            li.slideUp(200, () => this.render(false));
-        });
+        // // Active Effect management
+        // html.on('click', '.effect-control', (ev) => {
+        //     const row = ev.currentTarget.closest('li');
+        //     const document =
+        //           row.dataset.parentId === this.actor.id
+        //           ? this.actor
+        //           : this.actor.items.get(row.dataset.parentId);
+        //     onManageActiveEffect(ev, document);
+        // });
 
-        // Active Effect management
-        html.on('click', '.effect-control', (ev) => {
-            const row = ev.currentTarget.closest('li');
-            const document =
-                  row.dataset.parentId === this.actor.id
-                  ? this.actor
-                  : this.actor.items.get(row.dataset.parentId);
-            onManageActiveEffect(ev, document);
-        });
+        // // Rollable abilities.
+        // html.on('click', '.rollable', this._onRoll.bind(this));
 
-        // Rollable abilities.
-        html.on('click', '.rollable', this._onRoll.bind(this));
+        // // Drag events for macros.
+        // if (this.actor.isOwner) {
+        //     let handler = (ev) => this._onDragStart(ev);
+        //     html.find('li.item').each((i, li) => {
+        //         if (li.classList.contains('inventory-header')) return;
+        //         li.setAttribute('draggable', true);
+        //         li.addEventListener('dragstart', handler, false);
+        //     });
+        // }
 
-        // Drag events for macros.
-        if (this.actor.isOwner) {
-            let handler = (ev) => this._onDragStart(ev);
-            html.find('li.item').each((i, li) => {
-                if (li.classList.contains('inventory-header')) return;
-                li.setAttribute('draggable', true);
-                li.addEventListener('dragstart', handler, false);
-            });
-        }
-
-        // Clash Dialog
-        html.on('click', '.clashable', this._clashDialog.bind(this));
+        // // Clash Dialog
+        // html.on('click', '.clashable', this._clashDialog.bind(this));
     }
 
     /**
@@ -291,33 +336,6 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         clash.setTarget(getViewedActors()[0]); // Low effort default target
         const app = new ClashApplication(clash);
         app.render(true);
-    }
-
-    /**
-     * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
-     * @param {Event} event   The originating click event
-     * @private
-     */
-    async _onItemCreate(event) {
-        event.preventDefault();
-        const header = event.currentTarget;
-        // Get the type of item to create.
-        const type = header.dataset.type;
-        // Grab any data associated with this control.
-        const data = duplicate(header.dataset);
-        // Initialize a default name.
-        const name = `New ${type.capitalize()}`;
-        // Prepare the item object.
-        const itemData = {
-            name: name,
-            type: type,
-            system: data,
-        };
-        // Remove the type from the dataset since it's in the itemData.type prop.
-        delete itemData.system['type'];
-
-        // Finally, create the item!
-        return await Item.create(itemData, { parent: this.actor });
     }
 
     /**
