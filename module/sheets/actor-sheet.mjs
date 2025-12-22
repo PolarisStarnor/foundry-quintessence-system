@@ -53,6 +53,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
             createItem: QuintessenceSystemActorSheet.createItem,
             deleteItem: QuintessenceSystemActorSheet.deleteItem,
             editItem: QuintessenceSystemActorSheet.editItem,
+            skillRoll: QuintessenceSystemActorSheet.skillRoll,
         }
     }
 
@@ -139,7 +140,6 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         // Prepare Tabs
         context.tabs = this._prepareTabs("primary");
 
-        console.log(context);
         return context;
     }
 
@@ -166,6 +166,7 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         console.log(event);
         console.log(form);
         console.log(formData);
+
         return
     }
 
@@ -236,68 +237,11 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
 
     /* -------------------------------------------- */
 
-    static createItem(event, target) {
-        event.preventDefault();
-        // Get the type of item to create.
-        const type = target.dataset.type;
-        // Grab any data associated with this control.
-        const data = duplicate(target.dataset);
-        // Initialize a default name.
-        const name = `New ${type.capitalize()}`;
-        // Prepare the item object.
-        const itemData = {
-            name: name,
-            type: type,
-            system: data,
-        };
-        console.log("Created Item!")
-        return Item.create(itemData, { parent: this.actor });
-    }
-
-    static editItem(event, target) {
-        event.preventDefault();
-        const element = $(target)
-        const li = element.parents('.item');
-        const item = this.actor.items.get(li.data('itemId'));
-        item.sheet.render(true)
-    }
-
-    static deleteItem(event, target) {
-        event.preventDefault();
-        const element = $(target)
-        const li = element.parents('.item');
-        const item = this.actor.items.get(li.data('itemId'));
-        item.delete();
-        li.slideUp(200,() => this.render(false));
-    }
-
-    // static editItem(event, target) {
-
-    // }
-
     /** @override */
     _onRender(context, options) {
         // super._onRender(context, options);
         // const html = $(this.element); // Thing to keep JQuery or smth
 
-        // // Render the item sheet for viewing/editing prior to the editable check.
-        // html.on('click', '.item-edit', (ev) => {
-        //     const li = $(ev.currentTarget).parents('.item');
-        //     const item = this.actor.items.get(li.data('itemId'));
-        //     item.sheet.render(true);
-        // });
-
-        // // -------------------------------------------------------------
-        // // Everything below here is only needed if the sheet is editable
-        // if (!this.isEditable) return;
-
-        // // Delete Inventory Item
-        // html.on('click', '.item-delete', (ev) => {
-        //     const li = $(ev.currentTarget).parents('.item');
-        //     const item = this.actor.items.get(li.data('itemId'));
-        //     item.delete();
-        //     li.slideUp(200, () => this.render(false));
-        // });
 
         // // Active Effect management
         // html.on('click', '.effect-control', (ev) => {
@@ -338,12 +282,51 @@ export class QuintessenceSystemActorSheet extends HandlebarsApplicationMixin(Act
         app.render(true);
     }
 
+    static createItem(event, target) {
+        event.preventDefault();
+        // Get the type of item to create.
+        const type = target.dataset.type;
+        // Grab any data associated with this control.
+        const data = duplicate(target.dataset);
+        // Initialize a default name.
+        const name = `New ${type.capitalize()}`;
+        // Prepare the item object.
+        const itemData = {
+            name: name,
+            type: type,
+            system: data,
+        };
+        return Item.create(itemData, { parent: this.actor });
+    }
+
+    static editItem(event, target) {
+        event.preventDefault();
+        const element = $(target)
+        const li = element.parents('.item');
+        const item = this.actor.items.get(li.data('itemId'));
+        item.sheet.render(true)
+    }
+
+    static deleteItem(event, target) {
+        event.preventDefault();
+        const element = $(target)
+        const li = element.parents('.item');
+        const item = this.actor.items.get(li.data('itemId'));
+        item.delete();
+        li.slideUp(200,() => this.render(false));
+    }
+
+    // static editItem(event, target) {
+
+    // }
+
     /**
      * Handle clickable rolls.
      * @param {Event} event   The originating click event
      * @private
      */
-    _onRoll(event) {
+    skillRoll(event, target) {
+        console.log("roll")
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;

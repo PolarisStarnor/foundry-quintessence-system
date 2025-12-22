@@ -34,20 +34,22 @@
         <div class='skill-stats item-prop'>{{item.system.coins}}</div>
         <div class='skill-stats item-prop'>{{item.system.coin_power}}</div>
         <div class='item-controls'>
-          <a class='rollable' data-roll-type='skill-check'>
+          <a class='rollable' data-roll-type='skill-check' data-action='skillRoll'>
             <img
               src='systems/foundry-quintessence-system/assets/dice.png'
               title='Skill Check'
               width='14'
               height='14'
+              class='quintessence-icon'
             />
           </a>
-          <a class='rollable' data-roll-type='skill-damage'>
+          <a class='rollable' data-roll-type='skill-damage' data-action='skillRoll'>
             <img
               src='systems/foundry-quintessence-system/assets/sword.png'
               title='Unopposed Damage'
               width='14'
               height='14'
+              class='quintessence-icon'
             />
           </a>
           <a
